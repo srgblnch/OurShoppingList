@@ -1,6 +1,8 @@
 # OurShoppingList (for Android)
 
-This is mi first Android App and a reencouter with Java after almost two decades. It comes from the fact that I didn't find apps to maintain a shopping list that acts like I want. I thought I could learn how to do one and do the features I like be myself.
+This is mi first Android App and a reencouter with Java after almost two decades. This toy-project starts from the idea that "If there isn't apps that does the things the way I like, do your one", and share it as free software.
+
+This project is under the GPLv3+ License.
 
 ## Features
 
