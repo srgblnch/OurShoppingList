@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cat.calcurco.ourshoppinglist">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ProductNewActivity"
+            android:label="Add new item" />
+        <activity
+            android:name=".ProductModifyActivity"
+            android:label="Edit an item" />
+        <activity
+            android:name=".CategoriesActivity"
+            android:label="@string/title_activity_categories"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CategoryNewActivity"
+            android:label="Add new category" />
+        <activity
+            android:name=".CategoryModifyActivity"
+            android:label="Edit an category" />
+        <activity
+            android:name=".ShopsActivity"
+            android:label="@string/title_activity_shops"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ShopNewActivity"
+            android:label="Add new shop" />
+        <activity
+            android:name=".ShopModifyActivity"
+            android:label="Edit an shop" />
+        <activity
+            android:name=".ShopsSelectionActivity"
+            android:label="Select shops for the Item"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".AboutActivity"
+            android:label="About..."
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Preferences"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".ShopListingActivity"
+            android:label="Select the shop"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity android:name=".ShoppingActivity" />
+        <activity android:name=".ShoppingActivity" />
+        <activity android:name=".LicenseActivity"></activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="preferences_main" >
+    <CheckBoxPreference
+        android:key="debugMode"
+        android:title="Debug mode"
+        android:summary="Flag the execution as in debug mode."/>
+    <!--<PreferenceCategory android:title="All Products list">-->
+        <!--<CheckBoxPreference-->
+            <!--android:key="categoriesGroup"-->
+            <!--android:title="Agrupate the products by their category"-->
+            <!--android:summary="Divide the list of products in sets of categories."/>-->
+    <!--</PreferenceCategory>-->
+    <!--<CheckBoxPreference-->
+        <!--android:key="nopreferences"-->
+        <!--android:title="No preferences"-->
+        <!--android:summary="Not yet developed the preferences."/>-->
+    <!--<EditTextPreference-->
+        <!--android:key="maximo"-->
+        <!--android:title="Distancia para notificar"-->
+        <!--android:summary="Distancia mínima (Km) para notificar"-->
+        <!--android:defaultValue="12"/>-->
+    <!--<ListPreference-->
+        <!--android:key="orden"-->
+        <!--android:title="Criterio de ordenación"-->
+        <!--android:summary="Que lugares quieres que aparezcan antes"-->
+        <!--android:entries="@array/tiposOrden"-->
+        <!--android:entryValues="@array/tiposOrdenValores"-->
+        <!--android:defaultValue="1"/>-->
+    <!--<PreferenceScreen-->
+    <!--<PreferenceCategory-->
+        <!--android:title="Notificaciones por correo">-->
+        <!--<CheckBoxPreference-->
+            <!--android:key="receive_mails"-->
+            <!--android:title="Recibir correos"-->
+            <!--android:summary="Report by email"/>-->
+        <!--<EditTextPreference-->
+            <!--android:key="receiver"-->
+            <!--android:title="Dirección de correo"-->
+            <!--android:summary="Destination of the report mails"/>-->
+        <!--<ListPreference-->
+            <!--android:key="notification_types"-->
+            <!--android:title="Tipos de notificaciones"-->
+            <!--android:summary="Types of notifications to be sent"-->
+            <!--android:entries="@array/notificationsTypes"-->
+            <!--android:entryValues="@array/notificationTypesValues"-->
+            <!--android:defaultValue="1"/>-->
+    <!--</PreferenceCategory>-->
+    <!--</PreferenceScreen>-->
+    <!--<PreferenceCategory-->
+        <!--android:title="multiplayer mode">-->
+        <!--<CheckBoxPreference-->
+            <!--android:key="multiplayer"-->
+            <!--android:title="Multiplayer mode"-->
+            <!--android:summary="Allow multiple players"/>-->
+    <!--</PreferenceCategory>-->
+</PreferenceScreen>
