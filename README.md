@@ -9,9 +9,9 @@ This project is under the GPLv3+ License.
 - [x] Main screen with alphabetical check list of products
   - [x] New product Action button
     - [ ] List product names starting like what the user is typing
-  - [ ] Group them in categories (expandable)
-  - [x] Short click flip "buy" tick
-  - [x] Long click edit the product
+  - [ ] Group products into categories (expandable widget)
+  - [x] Short click: flip "buy" tick
+  - [x] Long click: edit the product (like the new product view)
     - [x] Allow to set the product category
     - [x] Allow to set the shops where it can be bought
     - [x] Select how many should be bought
@@ -19,8 +19,8 @@ This project is under the GPLv3+ License.
     - [ ] Feature to have products to be bought only once (removed once bought)
     - [ ] Product picture
 - [x] Categories screen alphabetically listed
-  - [ ] Show products on each category
-  - [ ] Allow quick selection of products to be set to the given category
+  - [ ] Show products on each category (maybe short click)
+  - [ ] Allow quick selection of products to be set to the given category (while in show products in the category).
   - [ ] When a category is deleted, reassign its products as "Unclassified"
 - [x] Shops screen alphabetically listed
   - [ ] Allow quick selection of products to be assigned to the given shop
@@ -37,6 +37,9 @@ This project is under the GPLv3+ License.
   - [ ] Via a server
     - [ ] Allow users to share the list of products between them
   - [ ] Peer2peer
+- [ ] History of products (when they where bought, for statistical info of how often I buy them). Special enfasis on privacy, this must be information only for the owners of the list.
+   - [ ] Barcode scan
+   - [ ] Price log
 
 ## Internal development
 
