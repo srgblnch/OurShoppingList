@@ -42,11 +42,11 @@ This project is under the GPLv3+ License.
   - [ ] Via Bluetooth
   - [ ] Via a server
     - [ ] Allow users to share the list of products between them
-  - [ ] Peer2peer
+  - [ ] Peer2peer (perhaps over MQTT)
 - [ ] History of products (statistics with special enfasis on privacy, this must be information only for the owners of the list).
   - [ ] When they where bought
     - [ ] Price log
 
-## Internal development
+## Internal pending improvements
 
 - [ ] unify the Adaptor classes
