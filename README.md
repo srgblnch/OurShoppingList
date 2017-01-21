@@ -1,8 +1,9 @@
 # OurShoppingList (for Android)
 
-This is mi first Android App and a reencouter with Java after almost two decades. This toy-project starts from the idea that "If there isn't apps that does the things the way I like, do your one", and share it as free software.
+This is my first Android App and a reencouter with Java after almost two decades. This _toy-project_ starts from the idea that "If there isn't apps that does the things the way I like, I'll propose one", and share it as free software. For any user be sure the app doesn't do anything unwanted (like a dark usage of the information, specially about the statistics) the free software license is perfect; the sources can be read by anyone to be sure it does what it says. If there is some feature or behaviour that some one like to have it different, the license allow to do it always sharing back the contribution.
 
-This project is under the GPLv3+ License.
+![license GPLv3+](https://img.shields.io/badge/license-GPLv3+-green.svg)
+![2 - Pre-Alpha](https://img.shields.io/badge/Development_Status-2_--_pre--alpha-orange.svg)
 
 ## Features
 
