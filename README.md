@@ -39,11 +39,13 @@ This project is under the GPLv3+ License.
       - Columns: productName\tbuy\thowmany\tcategoryName\tshop,position;shop,position;...
          - Example: Aigua\tTrue\t3\tAlimentació\tEroski,3;Caprabo,0
     - [ ] json
+  - [ ] transactions (like log what is being made, needed for the sync with other devices later on)
 - [ ] Multiple device synchronization
   - [ ] Via Bluetooth
   - [ ] Via a server
     - [ ] Allow users to share the list of products between them
   - [ ] Peer2peer (perhaps over MQTT)
+    - [ ] Trusted discovery of partners
 - [ ] History of products (statistics with special enfasis on privacy, this must be information only for the owners of the list).
   - [ ] When they where bought
     - [ ] Price log
