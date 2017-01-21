@@ -33,11 +33,12 @@ This project is under the GPLv3+ License.
 - [x] "In the shop" Action button
   - [x] Select the shop where one is going to buy
   - [ ] Feature to auto-position based on the ongoing products loaded to the cart
-- [ ] Import/Export the SQLite
-  - [ ] csv files
-    - Columns: productName\tbuy\thowmany\tcategoryName\tshop,position;shop,position;...
-       - Example: Aigua\tTrue\t3\tAlimentació\tEroski,3;Caprabo,0
-  - [ ] json
+- [x] SQLite internal database
+  - [ ] Import/Export
+    - [ ] csv files
+      - Columns: productName\tbuy\thowmany\tcategoryName\tshop,position;shop,position;...
+         - Example: Aigua\tTrue\t3\tAlimentació\tEroski,3;Caprabo,0
+    - [ ] json
 - [ ] Multiple device synchronization
   - [ ] Via Bluetooth
   - [ ] Via a server
