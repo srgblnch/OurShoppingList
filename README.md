@@ -34,6 +34,7 @@ This is my first Android App and a reencouter with Java after almost two decades
 - [x] "In the shop" Action button
   - [x] Select the shop where one is going to buy
   - [ ] Feature to auto-position based on the ongoing products loaded to the cart
+  - [ ] Slice product to instead of mark as "in the card" tag that "today is not in the shop".
 - [x] SQLite internal database
   - [ ] Import/Export
     - [ ] csv files
