@@ -29,6 +29,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Vector;
 
 import OurShoppingListObjs.Category;
@@ -41,6 +45,7 @@ import OurShoppingListObjs.Shop;
  */
 
 public class OurShoppingListDB extends SQLiteOpenHelper {
+    final static String TAG = "OurShoppingListDB";
 
     public OurShoppingListDB(Context context) {
         super(context, "OurShoppingList", null, 1);
@@ -480,6 +485,44 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
             Log.w("OurShoppingListDataBase", "Delete failed, pair ("+product.getId()+","+shop.getId()+") doesn't exist");
             return false;
         }
+    }
+
+    /*********************************** Import/export methods  ***********************************/
+    protected boolean exportDB2CSV(String directory, String fileName) {
+        Boolean returnCode = false;
+        String query = "SELECT * FROM Products";
+        SQLiteDatabase db = getReadableDatabase();
+        String header = "";
+        String line = "";
+        try{
+            File file = new File(directory, fileName);
+            file.createNewFile();
+            FileWriter writer = new FileWriter(file);
+            BufferedWriter out = new BufferedWriter(writer);
+
+            Cursor cursor = db.rawQuery(query, null);
+            if (cursor != null) {
+                String[] columnNames = cursor.getColumnNames();
+                for (int i=0; i<columnNames.length; i++) {
+                    header += columnNames[i];
+                    if (i != columnNames.length-1) {
+                        header += "\t";
+                    }
+                }
+                out.write(header);
+//                while (cursor.moveToNext()) {
+//                    line = cursor.getString(0) + "\t";
+//                }
+            }
+
+
+
+        } catch (IOException e) {
+            returnCode = false;
+            Log.d(TAG, "IOException: " + e.getMessage());
+        }
+        db.close();
+        return returnCode;
     }
 
     /************************************** Intenal methods  **************************************/
