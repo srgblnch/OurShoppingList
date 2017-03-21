@@ -78,7 +78,7 @@ public class Categories implements OurLists {
         return DatabaseSingleton.getInstance().getCategory(id);
     }
 
-    public Category elementByPosition(int position) {
+    public Category elementByPosition(Integer position) {
         Log.d("Categories", "elementByPosition("+position+")");
         if (context == null) {
             return null;
@@ -106,12 +106,12 @@ public class Categories implements OurLists {
         return id;
     }
 
-    public boolean modify(Category category) {
+    public boolean modify(OurShoppingListObj'' category) {
         Log.d("Categories", "modify("+category.getName()+")");
         if (context == null) {
             return false;
         }
-        return DatabaseSingleton.getInstance().modifyCategory(category);
+        return DatabaseSingleton.getInstance().modifyCategory((Category) category);
     }
 
     public boolean remove(Integer id) {

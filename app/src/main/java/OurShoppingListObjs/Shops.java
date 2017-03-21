@@ -78,7 +78,7 @@ public class Shops implements OurLists {
         return DatabaseSingleton.getInstance().getShop(id);
     }
 
-    public Shop elementByPosition(int position) {
+    public Shop elementByPosition(Integer position) {
         Log.d("Shops", "elementByPosition("+position+")");
         if (context == null) {
             return null;
@@ -106,12 +106,12 @@ public class Shops implements OurLists {
         return id;
     }
 
-    public boolean modify(Shop shop) {
+    public boolean modify(OurShoppingListObj shop) {
         Log.d("Shop", "modify("+shop.getName()+")");
         if (context == null) {
             return false;
         }
-        return DatabaseSingleton.getInstance().modifyShop(shop);
+        return DatabaseSingleton.getInstance().modifyShop((Shop) shop);
     }
 
     public boolean remove(Integer id) {
