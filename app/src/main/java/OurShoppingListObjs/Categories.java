@@ -106,7 +106,7 @@ public class Categories implements OurLists {
         return id;
     }
 
-    public boolean modify(OurShoppingListObj'' category) {
+    public boolean modify(OurShoppingListObj category) {
         Log.d("Categories", "modify("+category.getName()+")");
         if (context == null) {
             return false;
