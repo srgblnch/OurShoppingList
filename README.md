@@ -19,7 +19,6 @@ This is my first Android App and a reencouter with Java after almost two decades
     - [x] Allow to store a modified product as well as delete it
     - [ ] Feature to have products to be bought only once (removed once bought)
     - [ ] Product picture
-  - [ ] Products to be bought only once
   - [ ] Barcode scan
   - [ ] Priority of a product to be bought (to provide info to ring the bell if one should go to a certain shop soon).
 - [x] Categories screen alphabetically listed
