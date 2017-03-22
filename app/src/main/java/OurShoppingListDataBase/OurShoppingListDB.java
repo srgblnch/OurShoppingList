@@ -29,10 +29,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Vector;
 
 import OurShoppingListObjs.Category;
@@ -49,12 +45,12 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
 
     public OurShoppingListDB(Context context) {
         super(context, "OurShoppingList", null, 1);
-        Log.d("OurShoppingListDataBase", "construtor");
+        Log.d(TAG, "construtor");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.i("OurShoppingListDataBase", "OnCreate()");
+        Log.i(TAG, "OnCreate()");
         createCategoriesTable(db);
         createProductsTable(db);
         createShopsTable(db);
@@ -63,13 +59,13 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.i("OurShoppingListDataBase", "onUpgrade("+oldVersion+", "+newVersion+")");
+        Log.i(TAG, "onUpgrade("+oldVersion+", "+newVersion+")");
     }
 
     /**************************************** Products table  ****************************************/
 
     private void createProductsTable(SQLiteDatabase db) {
-        Log.d("OurShoppingListDataBase", "createProductsTable()");
+        Log.d(TAG, "createProductsTable()");
         String creator =
             "CREATE TABLE `Products` (" +
                     "`id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
@@ -82,17 +78,17 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected Product getProductObj(Integer id) {
-        Log.d("OurShoppingListDataBase", "getProductObj("+id+")");
+        Log.d(TAG, "getProductObj("+id+")");
         return (Product)builderById("Products", id);
     }
 
     protected Product getProductObj(String name) {
-        Log.d("OurShoppingListDataBase", "getProductObj("+name+")");
+        Log.d(TAG, "getProductObj("+name+")");
         return (Product)builderByName("Products", name);
     }
 
     protected Vector<String> getProductNames() {
-        Log.d("OurShoppingListDataBase", "getProductNames()");
+        Log.d(TAG, "getProductNames()");
         return getAllInTable("Products");
     }
 
@@ -109,24 +105,24 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected Integer insertProductObj(Product obj) {
-        Log.d("OurShoppingListDataBase", "insertProductObj("+obj.getName()+")");
+        Log.d(TAG, "insertProductObj("+obj.getName()+")");
         if ( getIdFromName("Products", obj.getName()) == -1 ) { //Doesn't exist
             int buy;
             if ( obj.getBuy() ) { buy = 1; } else { buy = 0; }
             String insert = "INSERT INTO Products VALUES ( null, '"+obj.getName()+"', "+buy+", "+obj.getCategoryId()+", "+obj.getHowMany()+")";
             SQLiteDatabase db = getWritableDatabase();
             db.execSQL(insert);
-            Log.d("OurShoppingListDataBase", "Insert: "+insert);
+            Log.d(TAG, "Insert: "+insert);
             return getIdFromName("Products", obj.getName());
         } else {
-            Log.w("OurShoppingListDataBase", "Insert failed, "+obj.getName()+"already exist");
+            Log.w(TAG, "Insert failed, "+obj.getName()+"already exist");
             return -1;
         }
     }
 
     protected boolean modifyProductObj(Product obj) {
         Integer id = obj.getId();
-        Log.d("OurShoppingListDataBase", "modifyProductObj("+id+")");
+        Log.d(TAG, "modifyProductObj("+id+")");
         if (getProductObj(id) == null) {
             return false;
         }
@@ -139,19 +135,19 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
                 "category = "+obj.getCategoryId()+", "+
                 "howmany = "+obj.getHowMany()+" "+
                 "WHERE id = "+id;
-        Log.d("OurShoppingListDataBase", modification);
+        Log.d(TAG, modification);
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL(modification);
         return true;
     }
 
     protected boolean removeProductObj(Integer id) {
-        Log.d("OurShoppingListDataBase", "removeProductObj("+id+")");
+        Log.d(TAG, "removeProductObj("+id+")");
         if (getProductObj(id) == null) {
             return false;
         }
         String deletion = "DELETE FROM Products WHERE id = " + id;
-        Log.d("OurShoppingListDataBase", deletion);
+        Log.d(TAG, deletion);
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL(deletion);
         return true;
@@ -172,7 +168,7 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     /************************************** Categories table **************************************/
 
     private void createCategoriesTable(SQLiteDatabase db) {
-        Log.d("OurShoppingListDataBase", "createCategoriesTable()");
+        Log.d(TAG, "createCategoriesTable()");
         String creator =
                 "CREATE TABLE `Categories` (" +
                         "`id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
@@ -182,17 +178,17 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     public Category getCategoryObj(Integer id) {
-        Log.d("OurShoppingListDataBase", "getCategoryObj("+id+")");
+        Log.d(TAG, "getCategoryObj("+id+")");
         return (Category)builderById("Categories", id);
     }
 
     public Category getCategoryObj(String name) {
-        Log.d("OurShoppingListDataBase", "getCategoryObj("+name+")");
+        Log.d(TAG, "getCategoryObj("+name+")");
         return (Category)builderByName("Categories", name);
     }
 
     public Vector<String> getCategoryNames() {
-        Log.d("OurShoppingListDataBase", "getCategoryNames()");
+        Log.d(TAG, "getCategoryNames()");
         return getAllInTable("Categories");
     }
 
@@ -209,22 +205,22 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected Integer insertCategoryObj(Category obj) {
-        Log.d("OurShoppingListDataBase", "insertCategoryObj("+obj.getName()+")");
+        Log.d(TAG, "insertCategoryObj("+obj.getName()+")");
         if ( getIdFromName("Categories", obj.getName()) == -1 ) { //Doesn't exist
             String insert = "INSERT INTO Categories VALUES ( null, '"+obj.getName()+"')";
             SQLiteDatabase db = getWritableDatabase();
             db.execSQL(insert);
-            Log.d("OurShoppingListDataBase", "Insert: "+insert);
+            Log.d(TAG, "Insert: "+insert);
             return getIdFromName("Categories", obj.getName());
         } else {
-            Log.w("OurShoppingListDataBase", "Insert failed, "+obj.getName()+"already exist");
+            Log.w(TAG, "Insert failed, "+obj.getName()+"already exist");
             return -1;
         }
     }
 
     protected boolean modifyCategoryObj(Category obj) {
         Integer id = obj.getId();
-        Log.d("OurShoppingListDataBase", "modifyCategoryObj("+id+")");
+        Log.d(TAG, "modifyCategoryObj("+id+")");
         if (getCategoryObj(id) == null) {
             return false;
         }
@@ -239,7 +235,7 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected boolean removeCategoryObj(Integer id) {
-        Log.d("OurShoppingListDataBase", "removeCategoryObj("+id+")");
+        Log.d(TAG, "removeCategoryObj("+id+")");
         if (getProductObj(id) == null) {
             return false;
         }
@@ -262,7 +258,7 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     /**************************************** Shops table  ****************************************/
 
     private void createShopsTable(SQLiteDatabase db) {
-        Log.d("OurShoppingListDataBase", "createShopsTable()");
+        Log.d(TAG, "createShopsTable()");
         String creator =
                 "CREATE TABLE `Shops` (" +
                         "`id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
@@ -272,17 +268,17 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     public Shop getShopObj(Integer id) {
-        Log.d("OurShoppingListDataBase", "getShopObj("+id+")");
+        Log.d(TAG, "getShopObj("+id+")");
         return (Shop)builderById("Shops", id);
     }
 
     public Shop getShopObj(String name) {
-        Log.d("OurShoppingListDataBase", "getShopObj("+name+")");
+        Log.d(TAG, "getShopObj("+name+")");
         return (Shop)builderByName("Shops", name);
     }
 
     public Vector<String> getShopNames() {
-        Log.d("OurShoppingListDataBase", "getShopNames()");
+        Log.d(TAG, "getShopNames()");
         return getAllInTable("Shops");
     }
 
@@ -299,22 +295,22 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected Integer insertShopObj(Shop obj) {
-        Log.d("OurShoppingListDataBase", "insertShopObj("+obj.getName()+")");
+        Log.d(TAG, "insertShopObj("+obj.getName()+")");
         if ( getIdFromName("Shops", obj.getName()) == -1 ) { //Doesn't exist
             String insert = "INSERT INTO Shops VALUES ( null, '"+obj.getName()+"')";
             SQLiteDatabase db = getWritableDatabase();
             db.execSQL(insert);
-            Log.d("OurShoppingListDataBase", "Insert: "+insert);
+            Log.d(TAG, "Insert: "+insert);
             return getIdFromName("Shops", obj.getName());
         } else {
-            Log.w("OurShoppingListDataBase", "Insert failed, "+obj.getName()+"already exist");
+            Log.w(TAG, "Insert failed, "+obj.getName()+"already exist");
             return -1;
         }
     }
 
     protected boolean modifyShopObj(Shop obj) {
         Integer id = obj.getId();
-        Log.d("OurShoppingListDataBase", "modifyShopObj("+id+")");
+        Log.d(TAG, "modifyShopObj("+id+")");
         if (getProductObj(id) == null) {
             return false;
         }
@@ -322,14 +318,14 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
         String modification = "UPDATE Shops SET "+
                 "name = '"+obj.getName()+"', "+
                 "WHERE id = "+id;
-        Log.d("OurShoppingListDataBase", modification);
+        Log.d(TAG, modification);
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL(modification);
         return true;
     }
 
     protected boolean removeShopObj(Integer id) {
-        Log.d("OurShoppingListDataBase", "removeShopObj("+id+")");
+        Log.d(TAG, "removeShopObj("+id+")");
         Shop shop = getShopObj(id);
         if (shop == null) {
             return false;
@@ -339,7 +335,7 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
             getProductObj(name).unassignShop(shop);
         }
         String deletion = "DELETE FROM Shops WHERE id = " + id;
-        Log.d("OurShoppingListDataBase", deletion);
+        Log.d(TAG, deletion);
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL(deletion);
         return true;
@@ -358,7 +354,7 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     /***************************** Products may have some shops assigned *****************************/
 
     private void createRelationProductsWithshops(SQLiteDatabase db) {
-        Log.d("OurShoppingListDataBase", "createRelationProductsWithshops()");
+        Log.d(TAG, "createRelationProductsWithshops()");
         String creator =
             "CREATE TABLE `Products_has_Shops` (" +
                     "`Product`INTEGER NOT NULL," +
@@ -370,15 +366,15 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected Vector<String> getShopProducts(Shop shop) {
-        Log.d("OurShoppingListDataBase", "getShopProducts("+shop.getName()+")");
+        Log.d(TAG, "getShopProducts("+shop.getName()+")");
         String query = "SELECT Product FROM Products_has_Shops WHERE Shop == "+shop.getId()+" ORDER BY position";
         Integer productId;
         Vector<String> productNames = new Vector<String>();
 
         SQLiteDatabase db = getReadableDatabase();
-        Log.w("OurShoppingListDataBase", "Query '" + query + "' is going to be launched");
+        Log.w(TAG, "Query '" + query + "' is going to be launched");
         Cursor cursor = db.rawQuery(query, null);
-        Log.d("OurShoppingListDataBase", cursor.getCount()+" 'Products_has_Shops' with shop '"+shop.getName()+"' located in the database");
+        Log.d(TAG, cursor.getCount()+" 'Products_has_Shops' with shop '"+shop.getName()+"' located in the database");
         while ( cursor.moveToNext() ) {
             productId = cursor.getInt(0);
             productNames.add(getProductName(productId));
@@ -389,14 +385,14 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected boolean isProductInShop(Product product, Shop shop) {
-        Log.d("OurShoppingListDataBase", "isProductInShop("+product.getName()+","+shop.getName()+")");
+        Log.d(TAG, "isProductInShop("+product.getName()+","+shop.getName()+")");
         String query = "SELECT Product, Shop FROM Products_has_Shops WHERE Product == "+product.getId()+" AND Shop == "+shop.getId();
         Integer counter;
 
         SQLiteDatabase db = getReadableDatabase();
-        Log.w("OurShoppingListDataBase", "Query '" + query + "' is going to be launched");
+        Log.w(TAG, "Query '" + query + "' is going to be launched");
         Cursor cursor = db.rawQuery(query, null);
-        Log.d("OurShoppingListDataBase", cursor.getCount()+" 'Products_has_Shops' with shop '"+shop.getName()+"' located in the database");
+        Log.d(TAG, cursor.getCount()+" 'Products_has_Shops' with shop '"+shop.getName()+"' located in the database");
         counter = cursor.getCount();
         cursor.close();
         db.close();
@@ -405,13 +401,13 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected Integer productPositionInShop(Product product, Shop shop) {
-        Log.d("OurShoppingListDataBase", "productPositionInShop("+product.getName()+", "+shop.getName()+")");
+        Log.d(TAG, "productPositionInShop("+product.getName()+", "+shop.getName()+")");
         Integer position = -1;
 
         if ( isProductInShop(product, shop)) {
             String query = "SELECT position FROM Products_has_Shops WHERE Product == "+product.getId()+" AND Shop == "+shop.getId();
             SQLiteDatabase db = getReadableDatabase();
-            Log.w("OurShoppingListDataBase", "Query '" + query + "' is going to be launched");
+            Log.w(TAG, "Query '" + query + "' is going to be launched");
             Cursor cursor = db.rawQuery(query, null);
             if ( cursor.moveToFirst() ) {
                 position = cursor.getInt(0);
@@ -423,23 +419,23 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected Integer insertProductInShop(Product product, Shop shop, Integer position) {
-        Log.d("OurShoppingListDataBase", "insertProductInShop("+product.getName()+", "+shop.getName()+")");
+        Log.d(TAG, "insertProductInShop("+product.getName()+", "+shop.getName()+")");
 
         if ( !isProductInShop(product, shop)) {
             String insert = "INSERT INTO Products_has_Shops VALUES ( "+product.getId()+", "+shop.getId()+", "+position+" )";
             SQLiteDatabase db = getWritableDatabase();
             db.execSQL(insert);
-            Log.d("OurShoppingListDataBase", "Insert: "+insert);
+            Log.d(TAG, "Insert: "+insert);
             db.close();
             return 1;
         } else {
-            Log.w("OurShoppingListDataBase", "Insert failed, pair ("+product.getId()+","+shop.getId()+") already exist");
+            Log.w(TAG, "Insert failed, pair ("+product.getId()+","+shop.getId()+") already exist");
             return 0;
         }
     }
 
     protected boolean modifyProductInShopPosition(Product product, Shop shop, Integer newPosition) {
-        Log.d("OurShoppingListDataBase", "modifyProductInShopPosition("+product.getName()+", "+shop.getName()+", "+newPosition+")");
+        Log.d(TAG, "modifyProductInShopPosition("+product.getName()+", "+shop.getName()+", "+newPosition+")");
 
         Integer oldPosition = productPositionInShop(product, shop);
         if ( oldPosition >= 0 ) {
@@ -447,29 +443,29 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
                 String modification = "UPDATE Products_has_Shops SET "+
                         "position = "+newPosition+" "+
                         "WHERE Product == "+product.getId()+" AND Shop == "+shop.getId();
-                Log.d("OurShoppingListDataBase", modification);
+                Log.d(TAG, modification);
                 SQLiteDatabase db = getWritableDatabase();
                 db.execSQL(modification);
                 db.close();
                 return true;
             } else {
-                Log.w("OurShoppingListDataBase", "position hasn't change");
+                Log.w(TAG, "position hasn't change");
             }
         } else {
-            Log.w("OurShoppingListDataBase", "Update failed, pair ("+product.getId()+","+shop.getId()+") doesn't exist");
+            Log.w(TAG, "Update failed, pair ("+product.getId()+","+shop.getId()+") doesn't exist");
         }
         return false;
     }
 
     protected boolean removeProductInShop(Product product, Shop shop) {
-        Log.d("OurShoppingListDataBase", "removeProductInShop("+product.getName()+", "+shop.getName()+")");
+        Log.d(TAG, "removeProductInShop("+product.getName()+", "+shop.getName()+")");
         String query = "SELECT Product, Shop FROM Products_has_Shops WHERE Product == "+product.getId()+" AND Shop == "+shop.getId();
         Integer counter;
 
         SQLiteDatabase db = getReadableDatabase();
-        Log.w("OurShoppingListDataBase", "Query '" + query + "' is going to be launched");
+        Log.w(TAG, "Query '" + query + "' is going to be launched");
         Cursor cursor = db.rawQuery(query, null);
-        Log.d("OurShoppingListDataBase", cursor.getCount()+" 'Products_has_Shops' with shop '"+shop.getName()+"' located in the database");
+        Log.d(TAG, cursor.getCount()+" 'Products_has_Shops' with shop '"+shop.getName()+"' located in the database");
         counter = cursor.getCount();
         cursor.close();
         db.close();
@@ -478,56 +474,18 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
             String deletion = "DELETE FROM Products_has_Shops WHERE Product == "+product.getId()+" AND Shop == "+shop.getId();
             db = getWritableDatabase();
             db.execSQL(deletion);
-            Log.d("OurShoppingListDataBase", "Delete: "+deletion);
+            Log.d(TAG, "Delete: "+deletion);
             db.close();
             return true;
         } else {
-            Log.w("OurShoppingListDataBase", "Delete failed, pair ("+product.getId()+","+shop.getId()+") doesn't exist");
+            Log.w(TAG, "Delete failed, pair ("+product.getId()+","+shop.getId()+") doesn't exist");
             return false;
         }
     }
 
-    /*********************************** Import/export methods  ***********************************/
-    protected boolean exportDB2CSV(String directory, String fileName) {
-        Boolean returnCode = false;
-        String query = "SELECT * FROM Products";
-        SQLiteDatabase db = getReadableDatabase();
-        String header = "";
-        String line = "";
-        try{
-            File file = new File(directory, fileName);
-            file.createNewFile();
-            FileWriter writer = new FileWriter(file);
-            BufferedWriter out = new BufferedWriter(writer);
-
-            Cursor cursor = db.rawQuery(query, null);
-            if (cursor != null) {
-                String[] columnNames = cursor.getColumnNames();
-                for (int i=0; i<columnNames.length; i++) {
-                    header += columnNames[i];
-                    if (i != columnNames.length-1) {
-                        header += "\t";
-                    }
-                }
-                out.write(header);
-//                while (cursor.moveToNext()) {
-//                    line = cursor.getString(0) + "\t";
-//                }
-            }
-
-
-
-        } catch (IOException e) {
-            returnCode = false;
-            Log.d(TAG, "IOException: " + e.getMessage());
-        }
-        db.close();
-        return returnCode;
-    }
-
     /************************************** Intenal methods  **************************************/
     private OurShoppingListObj builderById(String table, Integer id) {
-        Log.d("OurShoppingListDataBase", "builderById("+table+","+id+")");
+        Log.d(TAG, "builderById("+table+","+id+")");
         if ( table == "Products" ) {
             return new Product(id, getReadableDatabase());
         } else if ( table == "Shops" ) {
@@ -547,10 +505,10 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         if ( cursor.moveToFirst() ){
             exist = true;
-            Log.d("OurShoppingListDataBase", "table "+tableName+" found");
+            Log.d(TAG, "table "+tableName+" found");
         } else {
             exist = false;
-            Log.w("OurShoppingListDataBase", "table "+tableName+" NOT found!");
+            Log.w(TAG, "table "+tableName+" NOT found!");
         }
         cursor.close();
         db.close();
@@ -562,31 +520,31 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     private OurShoppingListObj builderByName(String table, String name) {
-        Log.d("OurShoppingListDataBase", "builderByName("+table+","+name+")");
+        Log.d(TAG, "builderByName("+table+","+name+")");
         Integer id = getIdFromName(table, name);
         return builderById(table, id);
     }
 
     private Integer getIdFromName(String table, String name) {
-        Log.d("OurShoppingListDataBase", "getIdFromName("+table+","+name+")");
+        Log.d(TAG, "getIdFromName("+table+","+name+")");
         String query = "SELECT id FROM "+table+" WHERE name LIKE '"+name+"'";
         Integer id = -1;
 
         if ( tableExist(table) ) {
             SQLiteDatabase db = getReadableDatabase();
-            Log.w("OurShoppingListDataBase", "Query '" + query + "' is going to be launched");
+            Log.w(TAG, "Query '" + query + "' is going to be launched");
             Cursor cursor = db.rawQuery(query, null);
-            Log.d("OurShoppingListDataBase", cursor.getCount() + " '" + table + "' with name '" + name + "' located in the database");
+            Log.d(TAG, cursor.getCount() + " '" + table + "' with name '" + name + "' located in the database");
             if (cursor.moveToNext()) {
                 id = cursor.getInt(0);
-                Log.d("OurShoppingListDataBase", "recovered " + name + ": " + id);
+                Log.d(TAG, "recovered " + name + ": " + id);
             }
             cursor.close();
             db.close();
             if (id != -1) {
-                Log.d("OurShoppingListDataBase", "Query " + query + " done");
+                Log.d(TAG, "Query " + query + " done");
             } else {
-                Log.w("OurShoppingListDataBase", "Query " + query + " failed");
+                Log.w(TAG, "Query " + query + " failed");
             }
         }
         return id;
@@ -610,7 +568,7 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     private Vector<String> getAllInTable(String table) {
-        Log.d("OurShoppingListDataBase", "getAllInTable()");
+        Log.d(TAG, "getAllInTable()");
         Integer id;
         String name;
         String query = "SELECT id, name FROM "+table+ " ORDER BY name COLLATE NOCASE";
@@ -618,16 +576,16 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        Log.d("OurShoppingListDataBase", cursor.getCount()+" "+table+" located in the database");
+        Log.d(TAG, cursor.getCount()+" "+table+" located in the database");
         while ( cursor.moveToNext() ) {
             id = cursor.getInt(0);
             name = cursor.getString(1);
-            Log.d("OurShoppingListDataBase", "recovered "+id+": "+name);
+            Log.d(TAG, "recovered "+id+": "+name);
             vector.add(name);
         }
         cursor.close();
         db.close();
-        Log.d("OurShoppingListDataBase", "Query "+query+" done");
+        Log.d(TAG, "Query "+query+" done");
         return vector;
     }
 }

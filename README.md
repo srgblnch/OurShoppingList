@@ -59,3 +59,4 @@ This is my first Android App and a reencouter with Java after almost two decades
 ## Internal pending improvements
 
 - [ ] unify the Adaptor classes
+- [ ] Split the OurShoppingListDB class
