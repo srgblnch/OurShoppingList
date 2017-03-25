@@ -48,6 +48,10 @@ public class DatabaseSingleton {
         Log.d("DatabaseSingleton", "Constructor");
     }
 
+    public Context getContext() {
+        return context;
+    }
+
     public void setContext(Context context) {
         Log.d("DatabaseSingleton", "setContext(...)");
         if ( this.context == null ) {
@@ -430,5 +434,17 @@ public class DatabaseSingleton {
             return false;
         }
         return db.removeProductInShop(product, shop);
+    }
+
+    /********************************** Import/export methods  ************************************/
+
+    public boolean exportDB2CSV(String directory, String fileName) {
+        OurShoppingListCSV csv = new OurShoppingListCSV(db);
+        return csv.exportDB2CSV(directory, fileName);
+    }
+
+    public boolean importDB2CSV(String directory, String fileName) {
+        OurShoppingListCSV csv = new OurShoppingListCSV(db);
+        return csv.importDB2CSV(directory, fileName);
     }
 }

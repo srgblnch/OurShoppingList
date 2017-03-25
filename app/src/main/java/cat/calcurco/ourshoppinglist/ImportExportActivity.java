@@ -35,11 +35,15 @@ import android.widget.Button;
 
 import java.io.File;
 
+import OurShoppingListObjs.ImportExport;
+
 /**
  * Created by serguei on 07/09/16.
  */
 
 public class ImportExportActivity extends AppCompatActivity {
+    final static String TAG = "ImportExportActivity";
+
     private Button importer;
     private Button exporter;
 
@@ -57,20 +61,26 @@ public class ImportExportActivity extends AppCompatActivity {
 //        exporter.setOnClickListener();
     }
 
-    private  void doImport() {
+    private void doImport() {
         requestRight(findViewById(R.id.importer), Manifest.permission.READ_EXTERNAL_STORAGE,
                 "Read access requested for the feature of import from a CSV file.",
                 REQUEST_READ_RIGHTS);
-//        File csvFile = new File();
-        // read the file
-        // for each row, if exist check discrepancies
+        ImportExport importObj = new ImportExport();
+        // TODO: ask the user for the directory and filename to read
+        String directory = "";
+        String fileName = "";
+        importObj.importDB2CSV(directory, fileName);
     }
 
-    private  void doExport() {
+    private void doExport() {
         requestRight(findViewById(R.id.exporter), Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 "Write access requested for the feature of export to a CSV file.",
                 REQUEST_WRITE_RIGHTS);
-        // write a csv file
+        ImportExport exportObj = new ImportExport();
+        // TODO: ask the user for the directory to write the filename it specify
+        String directory = "";
+        String fileName = "";
+        exportObj.exportDB2CSV(directory, fileName);
     }
 
     private void requestRight(View who, final String rightCode, String explanation,
