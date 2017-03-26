@@ -51,7 +51,7 @@ public class OurShoppingListCSV {
                 Log.e(TAG, "In exportDB2CSV(): file " + fileName + " writer NOT build");
             } else {
                 Log.d(TAG, "In exportDB2CSV(): file " + fileName + " writer build");
-                Cursor[] cursors = new Cursor[]{products, categories, shops}
+                Cursor[] cursors = new Cursor[]{products, categories, shops};
                 returnCode = prepareHeader(cursors, out);
                 if ( returnCode == false) {
                     Log.e(TAG, "In exportDB2CSV(): header NOT prepared");
