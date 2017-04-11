@@ -29,6 +29,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.Vector;
 
 import OurShoppingListObjs.Category;
@@ -62,6 +63,13 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
         Log.i(TAG, "onUpgrade("+oldVersion+", "+newVersion+")");
     }
 
+    protected int getVersion() {
+        SQLiteDatabase db = getReadableDatabase();
+        int version = db.getVersion();
+        db.close();
+        return version;
+    }
+
     /**************************************** Products table  ****************************************/
 
     private void createProductsTable(SQLiteDatabase db) {
@@ -75,6 +83,10 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
                     "`howmany` INTEGER" +
                     ");";
         db.execSQL(creator);
+    }
+
+    protected Vector<String> getProductFields() {
+        return new Vector<String>(Arrays.asList("buy", "howmany"));
     }
 
     protected Product getProductObj(Integer id) {
@@ -104,12 +116,31 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
         return getNameFromId("Products", id);
     }
 
+    protected String getProductField(String name, String fieldName) {
+        return getFieldFromName("Products", fieldName, name);
+    }
+
+    protected Vector<String> getProductShops(String productName){
+        int productId = getProductId(productName);
+        Vector<String> shopNames = new Vector<String>();
+        int shopId;
+
+        for (String shopName : getShopNames()){
+            shopId = getShopId(shopName);
+            if ( isProductInShop(productName, productId, shopName, shopId) ){
+                shopNames.add(shopName);
+            }
+        }
+        return shopNames;
+    }
+
     protected Integer insertProductObj(Product obj) {
         Log.d(TAG, "insertProductObj("+obj.getName()+")");
         if ( getIdFromName("Products", obj.getName()) == -1 ) { //Doesn't exist
             int buy;
             if ( obj.getBuy() ) { buy = 1; } else { buy = 0; }
-            String insert = "INSERT INTO Products VALUES ( null, '"+obj.getName()+"', "+buy+", "+obj.getCategoryId()+", "+obj.getHowMany()+")";
+            String insert = "INSERT INTO Products VALUES ( null, '"+obj.getName()+"', "+buy+", "
+                    +obj.getCategoryId()+", "+obj.getHowMany()+")";
             SQLiteDatabase db = getWritableDatabase();
             db.execSQL(insert);
             Log.d(TAG, "Insert: "+insert);
@@ -385,14 +416,18 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected boolean isProductInShop(Product product, Shop shop) {
-        Log.d(TAG, "isProductInShop("+product.getName()+","+shop.getName()+")");
-        String query = "SELECT Product, Shop FROM Products_has_Shops WHERE Product == "+product.getId()+" AND Shop == "+shop.getId();
+        return isProductInShop(product.getName(), product.getId(), shop.getName(), shop.getId());
+    }
+
+    protected boolean isProductInShop(String productName, int productId, String shopName, int shopId) {
+        Log.d(TAG, "isProductInShop("+productName+","+shopName+")");
+        String query = "SELECT Product, Shop FROM Products_has_Shops WHERE Product == "+productId+" AND Shop == "+shopId;
         Integer counter;
 
         SQLiteDatabase db = getReadableDatabase();
         Log.w(TAG, "Query '" + query + "' is going to be launched");
         Cursor cursor = db.rawQuery(query, null);
-        Log.d(TAG, cursor.getCount()+" 'Products_has_Shops' with shop '"+shop.getName()+"' located in the database");
+        Log.d(TAG, cursor.getCount()+" 'Products_has_Shops' with shop '"+shopName+"' located in the database");
         counter = cursor.getCount();
         cursor.close();
         db.close();
@@ -401,11 +436,15 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     protected Integer productPositionInShop(Product product, Shop shop) {
-        Log.d(TAG, "productPositionInShop("+product.getName()+", "+shop.getName()+")");
+        return productPositionInShop(product.getName(), product.getId(), shop.getName(), shop.getId());
+    }
+
+    protected Integer productPositionInShop(String productName, int productId, String shopName, int shopId) {
+        Log.d(TAG, "productPositionInShop("+productName+", "+shopName+")");
         Integer position = -1;
 
-        if ( isProductInShop(product, shop)) {
-            String query = "SELECT position FROM Products_has_Shops WHERE Product == "+product.getId()+" AND Shop == "+shop.getId();
+        if ( isProductInShop(productName, productId, shopName, shopId)) {
+            String query = "SELECT position FROM Products_has_Shops WHERE Product == "+productId+" AND Shop == "+shopId;
             SQLiteDatabase db = getReadableDatabase();
             Log.w(TAG, "Query '" + query + "' is going to be launched");
             Cursor cursor = db.rawQuery(query, null);
@@ -565,6 +604,30 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
         db.close();
         Log.d("OurShoppingListDB", "Query "+query+" done");
         return name;
+    }
+
+    private String getFieldFromName(String table, String field, String name) {
+        String query = "SELECT "+field+" FROM "+table+" WHERE name LIKE "+name;
+        String content = "";
+
+        if ( tableExist(table) ) {
+            SQLiteDatabase db = getReadableDatabase();
+            Log.w(TAG, "Query '" + query + "' is going to be launched");
+            Cursor cursor = db.rawQuery(query, null);
+            Log.d(TAG, cursor.getCount() + " '" + table + "' with name '" + name + "' located in the database");
+            if (cursor.moveToNext()) {
+                content = cursor.getString(0);
+                Log.d(TAG, "recovered for "+name+" field: "+field+" value: "+content);
+            }
+            cursor.close();
+            db.close();
+            if (content.length() != 0) {
+                Log.d(TAG, "Query " + query + " done");
+            } else {
+                Log.w(TAG, "Query " + query + " failed");
+            }
+        }
+        return content;
     }
 
     private Vector<String> getAllInTable(String table) {

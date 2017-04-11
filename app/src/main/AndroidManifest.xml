@@ -3,8 +3,8 @@
     package="cat.calcurco.ourshoppinglist">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -63,7 +63,6 @@
             android:name=".ShopListingActivity"
             android:label="Select the shop"
             android:theme="@style/Theme.AppCompat.Dialog" />
-        <activity android:name=".ShoppingActivity" />
         <activity android:name=".ShoppingActivity" />
         <activity android:name=".LicenseActivity"></activity>
     </application>

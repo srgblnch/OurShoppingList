@@ -1,5 +1,7 @@
 package OurShoppingListObjs;
 
+import java.io.File;
+
 import OurShoppingListDataBase.DatabaseSingleton;
 
 /**
@@ -13,14 +15,14 @@ public class ImportExport {
 
     }
 
-    public boolean exportDB2CSV(String directory, String fileName) {
+    public boolean exportDB2CSV(File directory, String fileName) {
         DatabaseSingleton db = DatabaseSingleton.getInstance();
         return db.exportDB2CSV(directory, fileName);
     }
 
-    public boolean importDB2CSV(String directory, String fileName) {
+    public boolean importDB2CSV(File file) {
         DatabaseSingleton db = DatabaseSingleton.getInstance();
-        return db.importDB2CSV(directory, fileName);
+        return db.importDB2CSV(file);
     }
 }
 

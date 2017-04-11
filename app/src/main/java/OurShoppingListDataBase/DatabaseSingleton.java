@@ -26,6 +26,7 @@ package OurShoppingListDataBase;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.File;
 import java.util.Vector;
 
 import OurShoppingListObjs.Category;
@@ -438,13 +439,13 @@ public class DatabaseSingleton {
 
     /********************************** Import/export methods  ************************************/
 
-    public boolean exportDB2CSV(String directory, String fileName) {
+    public boolean exportDB2CSV(File directory, String fileName) {
         OurShoppingListCSV csv = new OurShoppingListCSV(db);
         return csv.exportDB2CSV(directory, fileName);
     }
 
-    public boolean importDB2CSV(String directory, String fileName) {
+    public boolean importDB2CSV(File file) {
         OurShoppingListCSV csv = new OurShoppingListCSV(db);
-        return csv.importDB2CSV(directory, fileName);
+        return csv.importDB2CSV(file);
     }
 }

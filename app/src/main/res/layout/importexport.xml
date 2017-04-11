@@ -4,14 +4,14 @@
     android:layout_height="match_parent">
 
     <Button
-        android:text="Import"
+        android:id="@+id/exporter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/importer" />
+        android:text="Export" />
 
     <Button
-        android:text="Export"
+        android:id="@+id/importer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/exporter" />
+        android:text="Import" />
 </LinearLayout>

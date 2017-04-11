@@ -9,9 +9,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by serguei on 22/03/17.
@@ -26,86 +28,36 @@ public class OurShoppingListCSV {
         Log.d(TAG, "construtor");
     }
 
-    protected boolean exportDB2CSV(String directory, String fileName) {
-        Log.d(TAG, "exportDB2CSV("+directory+", "+fileName+")");
+    protected boolean exportDB2CSV(File directory, String fileName) {
+        Log.d(TAG, "exportDB2CSV(" + directory.getAbsolutePath() + ", " + fileName + ")");
 
         Boolean returnCode = true;
-        SQLiteDatabase db = ourDB.getReadableDatabase();
+        Vector<String> productFields = ourDB.getProductFields();
+        Vector<String> productLinks = new Vector<String>(Arrays.asList("category", "shop"));
         BufferedWriter out = null;
-        ArrayMap<String, Cursor> pairs = new ArrayMap<String, Cursor>();
 
-        Cursor products = null;
-        Cursor categories = null;
-        Cursor shops = null;
-
-        pairs.put("Products", products);
-        pairs.put("Categories", categories);
-        pairs.put("Shops", shops);
-
-        if ( !launchQueries(db, pairs)) {
-            Log.w(TAG, "In exportDB2CSV(): Impossible to complete the export");
-            returnCode = false;
-        } else {
-            returnCode = prepareFile(directory, fileName, out);
-            if ( returnCode == false) {
-                Log.e(TAG, "In exportDB2CSV(): file " + fileName + " writer NOT build");
-            } else {
-                Log.d(TAG, "In exportDB2CSV(): file " + fileName + " writer build");
-                Cursor[] cursors = new Cursor[]{products, categories, shops};
-                returnCode = prepareHeader(cursors, out);
-                if ( returnCode == false) {
-                    Log.e(TAG, "In exportDB2CSV(): header NOT prepared");
-                } else {
-                    Log.e(TAG, "In exportDB2CSV(): header prepared");
-                    returnCode = populateCSV(cursors, out);
-                    if ( returnCode == false) {
-                        Log.e(TAG, "In exportDB2CSV(): csv NOT populated");
-                    } else {
-                        Log.e(TAG, "In exportDB2CSV(): csv populated");
-                    }
+        if ( prepareFile(directory, fileName, out) ) {
+            if ( prepareHeader(out, productFields, productLinks) ) {
+                if ( populateCSV(out, productFields, productLinks) ) {
+                    Log.i(TAG, "In exportDB2CSV(): Well done!!");
                 }
             }
         }
-        db.close();
-        products.close();
-        categories.close();
-        shops.close();
         return returnCode;
     }
 
     /* TODO */
-    protected boolean importDB2CSV(String directory, String fileName) {
-        Log.d(TAG, "importDB2CSV(" + directory + ", " + fileName + ")");
+    protected boolean importDB2CSV(File file) {
+        Log.d(TAG, "importDB2CSV(" + file.getAbsolutePath() + ", " + file.getName() + ")");
         return false;
     }
 
     /************************************** Intenal methods  **************************************/
-    private boolean launchQueries(SQLiteDatabase db, ArrayMap tables) {
-        Iterator it = tables.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            if ( !doQuery(db, (String)pair.getKey(), (Cursor)pair.getValue())) {
-                return false;
-            }
-            //it.remove(); // FIXME: ??
-            // from http://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
-            // it says: "avoids a ConcurrentModificationException"
-        }
-        return true;
-    }
-
-    private boolean doQuery(SQLiteDatabase db, String tableName, Cursor cursor) {
-        String query = "SELECT * FROM "+tableName;
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor == null) {
-            Log.w(TAG, "In exportDB2CSV(): no registers return from '" + query +"' query");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean prepareFile(String directory, String fileName, BufferedWriter out) {
+    private boolean prepareFile(File directory, String fileName, BufferedWriter out) {
         try {
+            if ( ! fileName.endsWith(".csv")) {
+                fileName += ".csv";
+            }
             File file = new File(directory, fileName);
             file.createNewFile();
             FileWriter writer = new FileWriter(file);
@@ -117,47 +69,69 @@ public class OurShoppingListCSV {
         return true;
     }
 
-    private boolean prepareHeader(Cursor[] cursors, BufferedWriter out) {
-        String header = "";
-        for (Cursor cursor: cursors) {
-            String[] columnNames = cursor.getColumnNames();
-            Log.d(TAG, "In prepareHeader(): query column names are "+columnNames);
-            try{
-                for (int i=0; i<columnNames.length; i++) {
-                    header += columnNames[i];
-                    if (i != columnNames.length-1) {
-                        header += "\t";
-                    }
+    private boolean prepareHeader(BufferedWriter out, Vector<String> productFields,
+                                  Vector<String> productLinks) {
+        String header = "# db version "+ourDB.getVersion()+"\n"
+                +"# csv version 0"
+                +"productt\t";
+        for (String fieldName: productFields) {
+            header += fieldName+"\t";
+        }
+        for (String links: productLinks){
+            header += links+"\t";
+        }
+        try{
+            out.write(header.substring(0, header.length() - 1));  // remove the last \t
+        } catch (IOException e) {
+            Log.d(TAG, "In prepareHeader(): IOException: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean populateCSV(BufferedWriter out, Vector<String> productFields,
+                                Vector<String> productLinks) {
+        String line = "";
+
+        for (String productName : ourDB.getProductNames()) {
+            line = productName+"\t";
+            for (String field : productFields) {
+                line += ourDB.getProductField(productName, field)+"\t";
+            }
+            for (String link : productLinks) {
+                if ( link == "category" ) {
+                    line += solveCategory(productName)+"\t";
+                } else if ( link == "shop" ) {
+                    line += solveShop(productName)+"\t";
                 }
-                out.write(header);
+            }
+            try{
+                out.write(line.substring(0, line.length() - 1));  // remove the last \t
             } catch (IOException e) {
-                Log.d(TAG, "In prepareHeader(): IOException: " + e.getMessage());
+                Log.d(TAG, "In populateCSV(): in "+productName+" IOException: " + e.getMessage());
                 return false;
             }
         }
         return true;
     }
 
-    private boolean populateCSV(Cursor[] cursors, BufferedWriter out) {
-        String line = "";
-        try{
-            line = "";
-            for (Cursor cursor: cursors) {
-                if (cursor.moveToNext()) {
-                    for (int i = 0; i < cursor.getColumnCount(); i++) {
-                        line += cursor.getString(i) + "\t";
-                    }
-                } else { // if (cursor.isAfterLast()) {
-                    for (int i = 0; i < cursor.getColumnCount(); i++) {
-                        line += "\t";
-                    }
-                }
-            }
-            out.write(line);
-        } catch (IOException e) {
-            Log.d(TAG, "In populateCSV(): IOException: " + e.getMessage());
-            return false;
+    private String solveCategory(String productName) {
+        int categoryId = Integer.parseInt(ourDB.getProductField(productName, "category"));
+        return ourDB.getCategoryName(categoryId);
+    }
+
+    private String solveShop(String  productName) {
+        String register = "";
+        int productId = ourDB.getProductId(productName);
+        Vector<String> shops = ourDB.getProductShops(productName);
+        int shopId;
+        int position;
+
+        for (String shopName : shops) {
+            shopId = ourDB.getShopId(shopName);
+            position = ourDB.productPositionInShop(productName, productId, shopName, shopId);
+            register += shopName+","+position+";";
         }
-        return true;
+        return register;
     }
 }

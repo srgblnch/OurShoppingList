@@ -24,16 +24,16 @@
 package cat.calcurco.ourshoppinglist;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import OurShoppingListObjs.ImportExport;
 
@@ -67,9 +67,7 @@ public class ImportExportActivity extends AppCompatActivity {
                 REQUEST_READ_RIGHTS);
         ImportExport importObj = new ImportExport();
         // TODO: ask the user for the directory and filename to read
-        String directory = "";
-        String fileName = "";
-        importObj.importDB2CSV(directory, fileName);
+        importObj.importDB2CSV(getApplicationContext().getFilesDir());
     }
 
     private void doExport() {
@@ -78,8 +76,12 @@ public class ImportExportActivity extends AppCompatActivity {
                 REQUEST_WRITE_RIGHTS);
         ImportExport exportObj = new ImportExport();
         // TODO: ask the user for the directory to write the filename it specify
-        String directory = "";
-        String fileName = "";
+        File directory = getApplicationContext().getFilesDir();
+        // TODO: ask the user for the file name
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        Date now = new Date();
+        String fileName = sdf.format(now);
+        // proceed with export
         exportObj.exportDB2CSV(directory, fileName);
     }
 
