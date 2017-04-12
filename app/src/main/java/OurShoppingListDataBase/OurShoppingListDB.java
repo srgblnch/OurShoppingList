@@ -607,7 +607,7 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     }
 
     private String getFieldFromName(String table, String field, String name) {
-        String query = "SELECT "+field+" FROM "+table+" WHERE name LIKE "+name;
+        String query = "SELECT "+field+" FROM "+table+" WHERE name LIKE '"+name+"'";
         String content = "";
 
         if ( tableExist(table) ) {

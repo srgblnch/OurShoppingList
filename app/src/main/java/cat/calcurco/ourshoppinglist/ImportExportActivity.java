@@ -24,12 +24,15 @@
 package cat.calcurco.ourshoppinglist;
 
 import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -46,6 +49,8 @@ public class ImportExportActivity extends AppCompatActivity {
 
     private Button importer;
     private Button exporter;
+    private EditText directoryText;
+    private EditText filenameText;
 
     private static final int REQUEST_READ_RIGHTS = 0;
     private static final int REQUEST_WRITE_RIGHTS = 1;
@@ -57,8 +62,29 @@ public class ImportExportActivity extends AppCompatActivity {
         importer = (Button) findViewById(R.id.importer);
         exporter = (Button) findViewById(R.id.exporter);
 
-//        importer.setOnClickListener();
-//        exporter.setOnClickListener();
+        directoryText = (EditText) findViewById(R.id.directoryText);
+        directoryText.setText(getApplicationContext().getFilesDir().getAbsolutePath());
+        // TODO: click listener for the directorySelector
+
+        filenameText = (EditText) findViewById(R.id.filenameText);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        Date now = new Date();
+        String fileName = sdf.format(now);  // TODO: Add the extension?
+        filenameText.setText(fileName);
+        // TODO: click listener for the filenameSelector
+
+        importer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doImport();
+            }
+        });
+        exporter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doExport();
+            }
+        });
     }
 
     private void doImport() {
@@ -67,7 +93,8 @@ public class ImportExportActivity extends AppCompatActivity {
                 REQUEST_READ_RIGHTS);
         ImportExport importObj = new ImportExport();
         // TODO: ask the user for the directory and filename to read
-        importObj.importDB2CSV(getApplicationContext().getFilesDir());
+        importObj.importDB2CSV(new File(directoryText.getText().toString()+"/"
+                +filenameText.getText().toString()));
     }
 
     private void doExport() {
@@ -75,29 +102,28 @@ public class ImportExportActivity extends AppCompatActivity {
                 "Write access requested for the feature of export to a CSV file.",
                 REQUEST_WRITE_RIGHTS);
         ImportExport exportObj = new ImportExport();
-        // TODO: ask the user for the directory to write the filename it specify
-        File directory = getApplicationContext().getFilesDir();
-        // TODO: ask the user for the file name
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        Date now = new Date();
-        String fileName = sdf.format(now);
+        File directory = new File(directoryText.getText().toString());
+        String fileName = filenameText.getText().toString();
         // proceed with export
         exportObj.exportDB2CSV(directory, fileName);
     }
 
     private void requestRight(View who, final String rightCode, String explanation,
                               final int requestCode) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, rightCode)) {
-            Snackbar.make(who, explanation, Snackbar.LENGTH_INDEFINITE).setAction("OK",
-                    new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ActivityCompat.requestPermissions(ImportExportActivity.this,
-                            new String[]{rightCode}, requestCode);
-                }
-            }).show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{rightCode}, requestCode);
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), rightCode) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, rightCode)) {
+                Snackbar.make(who, explanation, Snackbar.LENGTH_INDEFINITE).setAction("OK",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ActivityCompat.requestPermissions(ImportExportActivity.this,
+                                        new String[]{rightCode}, requestCode);
+                            }
+                        }).show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{rightCode}, requestCode);
+            }
         }
     }
 }

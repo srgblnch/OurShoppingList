@@ -59,11 +59,19 @@ public class OurShoppingListCSV {
                 fileName += ".csv";
             }
             File file = new File(directory, fileName);
-            file.createNewFile();
-            FileWriter writer = new FileWriter(file);
-            out = new BufferedWriter(writer);
+            if (file.createNewFile()) {
+                Log.d(TAG, "In prepareFile(): created: "+file.getAbsolutePath());
+                file.setWritable(true);
+                FileWriter writer = new FileWriter(file.getAbsoluteFile());
+                out = new BufferedWriter(writer);
+            } else {
+                throw new Exception("File "+fileName+" already exists!");
+            }
         } catch (IOException e) {
             Log.d(TAG, "In prepareFile(): IOException: " + e.getMessage());
+            return false;
+        } catch (Exception e) {
+            Log.d(TAG, "In prepareFile(): Exception: " + e.getMessage());
             return false;
         }
         return true;
@@ -72,20 +80,21 @@ public class OurShoppingListCSV {
     private boolean prepareHeader(BufferedWriter out, Vector<String> productFields,
                                   Vector<String> productLinks) {
         String header = "# db version "+ourDB.getVersion()+"\n"
-                +"# csv version 0"
-                +"productt\t";
+                +"# csv version 0\n"
+                +"product\t";
         for (String fieldName: productFields) {
             header += fieldName+"\t";
         }
         for (String links: productLinks){
             header += links+"\t";
         }
-        try{
-            out.write(header.substring(0, header.length() - 1));  // remove the last \t
-        } catch (IOException e) {
-            Log.d(TAG, "In prepareHeader(): IOException: " + e.getMessage());
-            return false;
-        }
+//        try{
+            header = header.substring(0, header.length() - 1)+"\n";  // replace the last \t by \n
+//            out.write(header, 0, header.length());
+//        } catch (IOException e) {
+//            Log.d(TAG, "In prepareHeader(): IOException: " + e.getMessage());
+//            return false;
+//        }
         return true;
     }
 
@@ -96,7 +105,8 @@ public class OurShoppingListCSV {
         for (String productName : ourDB.getProductNames()) {
             line = productName+"\t";
             for (String field : productFields) {
-                line += ourDB.getProductField(productName, field)+"\t";
+                line += ourDB.getProductField(productName, field);
+                line += "\t";
             }
             for (String link : productLinks) {
                 if ( link == "category" ) {
@@ -105,12 +115,13 @@ public class OurShoppingListCSV {
                     line += solveShop(productName)+"\t";
                 }
             }
-            try{
-                out.write(line.substring(0, line.length() - 1));  // remove the last \t
-            } catch (IOException e) {
-                Log.d(TAG, "In populateCSV(): in "+productName+" IOException: " + e.getMessage());
-                return false;
-            }
+//            try{
+                line = line.substring(0, line.length() - 1)+"\n";  // replace the last \t by \n
+//                out.write(line);
+//            } catch (IOException e) {
+//                Log.d(TAG, "In populateCSV(): in "+productName+" IOException: " + e.getMessage());
+//                return false;
+//            }
         }
         return true;
     }

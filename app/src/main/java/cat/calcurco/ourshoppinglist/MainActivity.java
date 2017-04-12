@@ -137,6 +137,11 @@ public class MainActivity extends AppCompatActivity {
             updateProductsList();
             return true;
         }
+        if (id == R.id.action_importexport) {
+            Log.d(TAG, "ImportExport");
+            launchImportExport(null);
+            return true;
+        }
         if (id == R.id.action_categories) {
             Log.d(TAG, "Categories");
             launchCategories(null);
@@ -201,11 +206,11 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, MODIFY_PRODUCT_RESULT);
     }
 
-//    public void launchImportExport(View view) {
-//        Intent intent = new Intent(this, ImportExportActivity.class);
-//        Log.d("MainActivity", "launchImportExport()");
-//        startActivity(intent);
-//    }
+    public void launchImportExport(View view) {
+        Intent intent = new Intent(this, ImportExportActivity.class);
+        Log.d(TAG, "launchImportExport()");
+        startActivity(intent);
+    }
 
     public void launchCategories(View view) {
         Intent intent = new Intent(this, CategoriesActivity.class);

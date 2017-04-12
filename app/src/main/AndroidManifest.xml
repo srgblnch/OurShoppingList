@@ -64,7 +64,10 @@
             android:label="Select the shop"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".ShoppingActivity" />
-        <activity android:name=".LicenseActivity"></activity>
+        <activity android:name=".LicenseActivity" />
+        <activity
+            android:name=".ImportExportActivity"
+            android:label="Import/Export"/>
     </application>
 
 </manifest>

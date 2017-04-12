@@ -2,17 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="cat.calcurco.ourshoppinglist.MainActivity">
-    <!--<item-->
-        <!--android:id="@+id/action_importexport"-->
-        <!--android:orderInCategory="10"-->
-        <!--android:title="Import / Export"-->
-        <!--android:icon="@android:drawable/ic_menu_share"-->
-        <!--app:showAsAction="ifRoom" />-->
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="10"
         android:title="@string/action_refresh"
         android:icon="@android:drawable/stat_notify_sync_noanim"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_importexport"
+        android:icon="@android:drawable/ic_menu_share"
+        android:orderInCategory="10"
+        android:title="Import / Export"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_categories"
