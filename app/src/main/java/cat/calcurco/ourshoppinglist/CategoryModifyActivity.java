@@ -38,6 +38,7 @@ import OurShoppingListObjs.Category;
  */
 
 public class CategoryModifyActivity extends CategoryNewActivity {
+    final static String TAG = "CategoryModifyActivity";
     protected Integer id;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,27 +50,27 @@ public class CategoryModifyActivity extends CategoryNewActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.product_modify, menu);
+        getMenuInflater().inflate(R.menu.ourshoppinglistobj_modify, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem category) {
-        switch (category.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.action_modify:
                 Category newCategory = saveCategory();
                 if ( newCategory != null ) {
-                    Log.d("CategoryModify", "Modified: "+newCategory + "(" + newCategory.getId() + ")");
+                    Log.d(TAG, "Modified: "+newCategory + "(" + newCategory.getId() + ")");
                     finish();
                     return true;
                 }
-                Log.w("CategoryModify", "NOT MODIFIED: "+newCategory + "(" + newCategory.getId() + ")");
+                Log.w(TAG, "NOT MODIFIED: "+newCategory + "(" + newCategory.getId() + ")");
                 return false;
             case R.id.action_delete:
                 requestConfirmation();
                 return true;
             default:
-                return super.onOptionsItemSelected(category);
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -79,6 +80,7 @@ public class CategoryModifyActivity extends CategoryNewActivity {
             Categories categories = Categories.getInstance();
             Category category = categories.elementById(id);
             category.setName(name);
+            categories.modify(category);
             return category;
         } catch ( Exception e ) {
             return null;

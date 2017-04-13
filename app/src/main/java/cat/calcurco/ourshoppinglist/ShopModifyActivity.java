@@ -39,7 +39,6 @@ import OurShoppingListObjs.Shops;
 
 public class ShopModifyActivity extends ShopNewActivity {
     final static String TAG = "ShopModifyActivity";
-
     protected Integer id;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +50,13 @@ public class ShopModifyActivity extends ShopNewActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.product_modify, menu);
+        getMenuInflater().inflate(R.menu.ourshoppinglistobj_modify, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem shop) {
-        switch (shop.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.action_modify:
                 Shop newShop = saveShop();
                 if ( newShop != null ) {
@@ -71,7 +70,7 @@ public class ShopModifyActivity extends ShopNewActivity {
                 requestConfirmation();
                 return true;
             default:
-                return super.onOptionsItemSelected(shop);
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -81,6 +80,7 @@ public class ShopModifyActivity extends ShopNewActivity {
             Shops shops = Shops.getInstance();
             Shop shop = shops.elementById(id);
             shop.setName(name);
+            shops.modify(shop);
             return shop;
         } catch ( Exception e ) {
             return null;

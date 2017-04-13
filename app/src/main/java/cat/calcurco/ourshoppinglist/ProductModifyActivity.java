@@ -55,7 +55,7 @@ public class ProductModifyActivity extends ProductNewActivity {
         String name = extras.getString("name");
         productText.setText(name);
         buyCheckBox.setChecked(extras.getBoolean("buy"));
-        howMany.setText(""+extras.getInt("howmany"));
+        howMany.setText(extras.getInt("howmany"));
         // FIXME: review this mesh
         DatabaseSingleton db = DatabaseSingleton.getInstance();
         Categories categories = Categories.getInstance();
@@ -82,7 +82,7 @@ public class ProductModifyActivity extends ProductNewActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.product_modify, menu);
+        getMenuInflater().inflate(R.menu.ourshoppinglistobj_modify, menu);
         return true;
     }
 

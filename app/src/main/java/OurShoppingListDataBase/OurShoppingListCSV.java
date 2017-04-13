@@ -1,18 +1,11 @@
 package OurShoppingListDataBase;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.ArrayMap;
 import android.util.Log;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -34,13 +27,18 @@ public class OurShoppingListCSV {
         Boolean returnCode = true;
         Vector<String> productFields = ourDB.getProductFields();
         Vector<String> productLinks = new Vector<String>(Arrays.asList("category", "shop"));
-        BufferedWriter out = null;
+        FileOutputStream out = null;
 
         if ( prepareFile(directory, fileName, out) ) {
             if ( prepareHeader(out, productFields, productLinks) ) {
-                if ( populateCSV(out, productFields, productLinks) ) {
+                if (populateCSV(out, productFields, productLinks)) {
                     Log.i(TAG, "In exportDB2CSV(): Well done!!");
                 }
+            }
+            try {
+                out.close();
+            } catch (IOException e) {
+                Log.i(TAG, "In exportDB2CSV(): Exception closing the file");
             }
         }
         return returnCode;
@@ -53,7 +51,7 @@ public class OurShoppingListCSV {
     }
 
     /************************************** Intenal methods  **************************************/
-    private boolean prepareFile(File directory, String fileName, BufferedWriter out) {
+    private boolean prepareFile(File directory, String fileName, FileOutputStream out) {
         try {
             if ( ! fileName.endsWith(".csv")) {
                 fileName += ".csv";
@@ -62,8 +60,7 @@ public class OurShoppingListCSV {
             if (file.createNewFile()) {
                 Log.d(TAG, "In prepareFile(): created: "+file.getAbsolutePath());
                 file.setWritable(true);
-                FileWriter writer = new FileWriter(file.getAbsoluteFile());
-                out = new BufferedWriter(writer);
+                out = new FileOutputStream(file);
             } else {
                 throw new Exception("File "+fileName+" already exists!");
             }
@@ -77,7 +74,7 @@ public class OurShoppingListCSV {
         return true;
     }
 
-    private boolean prepareHeader(BufferedWriter out, Vector<String> productFields,
+    private boolean prepareHeader(FileOutputStream out, Vector<String> productFields,
                                   Vector<String> productLinks) {
         String header = "# db version "+ourDB.getVersion()+"\n"
                 +"# csv version 0\n"
@@ -98,7 +95,7 @@ public class OurShoppingListCSV {
         return true;
     }
 
-    private boolean populateCSV(BufferedWriter out, Vector<String> productFields,
+    private boolean populateCSV(FileOutputStream out, Vector<String> productFields,
                                 Vector<String> productLinks) {
         String line = "";
 

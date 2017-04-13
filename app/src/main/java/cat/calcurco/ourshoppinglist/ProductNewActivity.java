@@ -136,7 +136,7 @@ public class ProductNewActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.product_add, menu);
+        getMenuInflater().inflate(R.menu.ourshoppinglistobj_add, menu);
         return true;
     }
 

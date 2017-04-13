@@ -257,11 +257,11 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
         }
         String name = obj.getName();
         String modification = "UPDATE Categories SET "+
-                "name = '"+obj.getName()+
+                "name = '"+obj.getName()+"' "+
                 "WHERE id = "+id;
-
+        Log.d(TAG, modification);
         SQLiteDatabase db = getWritableDatabase();
-        db.rawQuery(modification, null);
+        db.execSQL(modification);
         return true;
     }
 
@@ -342,12 +342,12 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
     protected boolean modifyShopObj(Shop obj) {
         Integer id = obj.getId();
         Log.d(TAG, "modifyShopObj("+id+")");
-        if (getProductObj(id) == null) {
+        if (getShopObj(id) == null) {
             return false;
         }
         String name = obj.getName();
         String modification = "UPDATE Shops SET "+
-                "name = '"+obj.getName()+"', "+
+                "name = '"+obj.getName()+"' "+
                 "WHERE id = "+id;
         Log.d(TAG, modification);
         SQLiteDatabase db = getWritableDatabase();
