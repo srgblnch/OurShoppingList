@@ -55,7 +55,7 @@ public class ProductModifyActivity extends ProductNewActivity {
         String name = extras.getString("name");
         productText.setText(name);
         buyCheckBox.setChecked(extras.getBoolean("buy"));
-        howMany.setText(extras.getInt("howmany"));
+        howMany.setText(String.valueOf(extras.getInt("howmany")));
         // FIXME: review this mesh
         DatabaseSingleton db = DatabaseSingleton.getInstance();
         Categories categories = Categories.getInstance();
