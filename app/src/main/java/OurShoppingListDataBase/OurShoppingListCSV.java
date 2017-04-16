@@ -5,6 +5,7 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -27,12 +28,17 @@ public class OurShoppingListCSV {
         Boolean returnCode = true;
         Vector<String> productFields = ourDB.getProductFields();
         Vector<String> productLinks = new Vector<String>(Arrays.asList("category", "shop"));
-        FileOutputStream out = null;
+        OutputStreamWriter out = null;
 
-        if ( prepareFile(directory, fileName, out) ) {
-            if ( prepareHeader(out, productFields, productLinks) ) {
-                if (populateCSV(out, productFields, productLinks)) {
-                    Log.i(TAG, "In exportDB2CSV(): Well done!!");
+        out = prepareFile(directory, fileName);
+        if ( out == null) {
+            returnCode = false;
+        } else {
+            returnCode = prepareHeader(out, productFields, productLinks);
+            if ( returnCode ) {
+                returnCode = populateCSV(out, productFields, productLinks);
+                if ( returnCode ) {
+                    Log.d(TAG, "In exportDB2CSV(): Well done!!");
                 }
             }
             try {
@@ -50,52 +56,55 @@ public class OurShoppingListCSV {
         return false;
     }
 
-    /************************************** Intenal methods  **************************************/
-    private boolean prepareFile(File directory, String fileName, FileOutputStream out) {
+    /************************************** Internal methods  *************************************/
+    private OutputStreamWriter prepareFile(File directory, String fileName) {
+        OutputStreamWriter out = null;
         try {
             if ( ! fileName.endsWith(".csv")) {
                 fileName += ".csv";
             }
             File file = new File(directory, fileName);
             if (file.createNewFile()) {
+                // fixme: perhaps check in the action in the user like to overwrite a file
                 Log.d(TAG, "In prepareFile(): created: "+file.getAbsolutePath());
                 file.setWritable(true);
-                out = new FileOutputStream(file);
+                FileOutputStream ostream = new FileOutputStream(file);
+                out = new OutputStreamWriter(ostream);
             } else {
                 throw new Exception("File "+fileName+" already exists!");
             }
         } catch (IOException e) {
             Log.d(TAG, "In prepareFile(): IOException: " + e.getMessage());
-            return false;
+            return null;
         } catch (Exception e) {
             Log.d(TAG, "In prepareFile(): Exception: " + e.getMessage());
-            return false;
+            return null;
         }
-        return true;
+        return out;
     }
 
-    private boolean prepareHeader(FileOutputStream out, Vector<String> productFields,
+    private boolean prepareHeader(OutputStreamWriter out, Vector<String> productFields,
                                   Vector<String> productLinks) {
         String header = "# db version "+ourDB.getVersion()+"\n"
-                +"# csv version 0\n"
-                +"product\t";
+                +"# csv version 0\n";
+        header += "product\t";
         for (String fieldName: productFields) {
             header += fieldName+"\t";
         }
         for (String links: productLinks){
             header += links+"\t";
         }
-//        try{
+        try{
             header = header.substring(0, header.length() - 1)+"\n";  // replace the last \t by \n
-//            out.write(header, 0, header.length());
-//        } catch (IOException e) {
-//            Log.d(TAG, "In prepareHeader(): IOException: " + e.getMessage());
-//            return false;
-//        }
+            out.write(header, 0, header.length());
+        } catch (IOException e) {
+            Log.d(TAG, "In prepareHeader(): IOException: " + e.getMessage());
+            return false;
+        }
         return true;
     }
 
-    private boolean populateCSV(FileOutputStream out, Vector<String> productFields,
+    private boolean populateCSV(OutputStreamWriter out, Vector<String> productFields,
                                 Vector<String> productLinks) {
         String line = "";
 
@@ -112,13 +121,13 @@ public class OurShoppingListCSV {
                     line += solveShop(productName)+"\t";
                 }
             }
-//            try{
+            try{
                 line = line.substring(0, line.length() - 1)+"\n";  // replace the last \t by \n
-//                out.write(line);
-//            } catch (IOException e) {
-//                Log.d(TAG, "In populateCSV(): in "+productName+" IOException: " + e.getMessage());
-//                return false;
-//            }
+                out.write(line);
+            } catch (IOException e) {
+                Log.d(TAG, "In populateCSV(): in "+productName+" IOException: " + e.getMessage());
+                return false;
+            }
         }
         return true;
     }
