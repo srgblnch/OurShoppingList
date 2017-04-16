@@ -30,6 +30,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -88,30 +89,50 @@ public class ImportExportActivity extends AppCompatActivity {
     }
 
     private void doImport() {
-        requestRight(findViewById(R.id.importer), Manifest.permission.READ_EXTERNAL_STORAGE,
+        if ( requestRight(findViewById(R.id.importer), Manifest.permission.READ_EXTERNAL_STORAGE,
                 "Read access requested for the feature of import from a CSV file.",
-                REQUEST_READ_RIGHTS);
-        ImportExport importObj = new ImportExport();
-        // TODO: ask the user for the directory and filename to read
-        importObj.importDB2CSV(new File(directoryText.getText().toString()+"/"
-                +filenameText.getText().toString()));
+                REQUEST_READ_RIGHTS) ) {
+            ImportExport importObj = new ImportExport();
+            File directory = new File(directoryText.getText().toString());
+            String fileName = filenameText.getText().toString();
+            if ( importObj.importDB2CSV(new File(directory, fileName)) ) {
+                Log.i(TAG, "In doImport(): Succeed");
+            } else {
+                Log.e(TAG, "In doImport(): Failed");
+            }
+        } else {
+            Snackbar.make(findViewById(R.id.exporter), "No read permission to proceed",
+                    Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void doExport() {
-        requestRight(findViewById(R.id.exporter), Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        if ( requestRight(findViewById(R.id.exporter), Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 "Write access requested for the feature of export to a CSV file.",
-                REQUEST_WRITE_RIGHTS);
-        ImportExport exportObj = new ImportExport();
-        File directory = new File(directoryText.getText().toString());
-        String fileName = filenameText.getText().toString();
-        // proceed with export
-        exportObj.exportDB2CSV(directory, fileName);
+                REQUEST_WRITE_RIGHTS) ) {
+            ImportExport exportObj = new ImportExport();
+            File directory = new File(directoryText.getText().toString());
+            String fileName = filenameText.getText().toString();
+            // proceed with export
+            if ( exportObj.exportDB2CSV(directory, fileName) ) {
+                Log.i(TAG, "In doExport(): Succeed");
+                Snackbar.make(findViewById(R.id.exporter), "Saved file",
+                        Snackbar.LENGTH_LONG).show();
+            } else {
+                Log.e(TAG, "In doExport(): Failed");
+                Snackbar.make(findViewById(R.id.exporter), "Failed to store the file",
+                        Snackbar.LENGTH_LONG).show();
+            }
+        } else {
+            Snackbar.make(findViewById(R.id.exporter), "No write permission to proceed",
+                    Snackbar.LENGTH_LONG).show();
+        }
     }
 
-    private void requestRight(View who, final String rightCode, String explanation,
+    private boolean requestRight(View who, final String rightCode, String explanation,
                               final int requestCode) {
-
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), rightCode) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                rightCode) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, rightCode)) {
                 Snackbar.make(who, explanation, Snackbar.LENGTH_INDEFINITE).setAction("OK",
                         new View.OnClickListener() {
@@ -124,6 +145,13 @@ public class ImportExportActivity extends AppCompatActivity {
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{rightCode}, requestCode);
             }
+            return true;
         }
+        return false;
+    }
+
+    public void OnRequestPermissionsResultCallback(int requestCode, String[] permissions,
+                                                   int[] grantResults){
+
     }
 }
