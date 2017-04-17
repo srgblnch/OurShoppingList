@@ -64,7 +64,7 @@ public class ImportExportActivity extends AppCompatActivity {
         exporter = (Button) findViewById(R.id.exporter);
 
         directoryText = (EditText) findViewById(R.id.directoryText);
-        directoryText.setText(getApplicationContext().getFilesDir().getAbsolutePath());
+        directoryText.setText(getApplicationContext().getExternalMediaDirs()[0].getAbsolutePath());
         // TODO: click listener for the directorySelector
 
         filenameText = (EditText) findViewById(R.id.filenameText);
@@ -131,9 +131,12 @@ public class ImportExportActivity extends AppCompatActivity {
 
     private boolean requestRight(View who, final String rightCode, String explanation,
                               final int requestCode) {
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                rightCode) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, rightCode)) {
+        int bar = ContextCompat.checkSelfPermission(this.getApplicationContext(), rightCode);
+        if ( bar != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "checkSelfPermission(...) didn't granted the permission");
+            boolean foo = ActivityCompat.shouldShowRequestPermissionRationale(this, rightCode);
+            if (foo) {
+                Log.d(TAG, "The permission should be requested to the user");
                 Snackbar.make(who, explanation, Snackbar.LENGTH_INDEFINITE).setAction("OK",
                         new View.OnClickListener() {
                             @Override
@@ -143,15 +146,27 @@ public class ImportExportActivity extends AppCompatActivity {
                             }
                         }).show();
             } else {
+                Log.d(TAG, "The permission should be requested to the sytem");
                 ActivityCompat.requestPermissions(this, new String[]{rightCode}, requestCode);
             }
             return true;
         }
-        return false;
+        return true;
     }
 
+    //@Override
     public void OnRequestPermissionsResultCallback(int requestCode, String[] permissions,
                                                    int[] grantResults){
+        Snackbar.make(findViewById(R.id.exporter),
+                "OnRequestPermissionsResultCallback("+requestCode+", "+permissions+", "+grantResults+")",
+                Snackbar.LENGTH_LONG).show();
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                                   int[] grantResults){
+        Snackbar.make(findViewById(R.id.exporter),
+                "onRequestPermissionsResult("+requestCode+", "+permissions+", "+grantResults+")",
+                Snackbar.LENGTH_LONG).show();
     }
 }
