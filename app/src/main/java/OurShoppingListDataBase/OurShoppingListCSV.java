@@ -2,10 +2,13 @@ package OurShoppingListDataBase;
 
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.Buffer;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -25,7 +28,7 @@ public class OurShoppingListCSV {
     protected boolean exportDB2CSV(File directory, String fileName) {
         Log.d(TAG, "exportDB2CSV(" + directory.getAbsolutePath() + ", " + fileName + ")");
 
-        Boolean returnCode = true;
+        boolean returnCode = true;
         Vector<String> productFields = ourDB.getProductFields();
         Vector<String> productLinks = new Vector<String>(Arrays.asList("category", "shop"));
         OutputStreamWriter out = null;
@@ -53,10 +56,52 @@ public class OurShoppingListCSV {
     /* TODO */
     protected boolean importDB2CSV(File file) {
         Log.d(TAG, "importDB2CSV(" + file.getAbsolutePath() + ", " + file.getName() + ")");
-        return false;
+
+        boolean returnCode = true;
+        Vector<String> fields = new Vector<String>();
+        BufferedReader in = null;
+
+        in = openFile(file);
+        if ( in == null ) {
+            returnCode = false;
+        } else {
+            returnCode = loadHeader(in, fields);
+            try {
+                if ( returnCode ) {
+                    String line;
+                    while ( (line = in.readLine() ) != null ) {
+                        Log.d(TAG, "Get the line: "+line);
+                        if ( ! processLine(line, fields) ) {
+                            Log.w(TAG, "There has been an issue reading " + line);
+                        }
+                    }
+                Log.d(TAG, "In importDB2CSV(): Well done!!");
+                }
+                in.close();
+            } catch (IOException e) {
+                Log.i(TAG, "In importDB2CSV(): Exception closing the file");
+            }
+        }
+
+        return returnCode;
     }
 
     /************************************** Internal methods  *************************************/
+    private boolean processLine(String line, Vector<String> fields) {
+        String[] components = line.split("\t");
+        for (int i=0; i<components.length; i++) {
+            if ( fields.elementAt(i).equals("product") ) {
+                if (ourDB.isProductInDB(components[i])) {
+''
+                }
+            }
+
+        }
+        return true;
+    }
+
+
+
     private OutputStreamWriter prepareFile(File directory, String fileName) {
         OutputStreamWriter out = null;
         try {
@@ -83,6 +128,21 @@ public class OurShoppingListCSV {
         return out;
     }
 
+    private BufferedReader openFile(File file) {
+        BufferedReader in = null;
+        try {
+            FileReader reader = new FileReader(file);
+            in = new BufferedReader(reader);
+        } catch (IOException e) {
+            Log.d(TAG, "In openFile(): IOException: " + e.getMessage());
+            return null;
+        } catch (Exception e) {
+            Log.d(TAG, "In openFile(): Exception: " + e.getMessage());
+            return null;
+        }
+        return in;
+    }
+
     private boolean prepareHeader(OutputStreamWriter out, Vector<String> productFields,
                                   Vector<String> productLinks) {
         String header = "# db version "+ourDB.getVersion()+"\n"
@@ -102,6 +162,32 @@ public class OurShoppingListCSV {
             return false;
         }
         return true;
+    }
+
+    private boolean loadHeader(BufferedReader in, Vector<String> fields) {
+        int dbVersion = -1;
+        int csvVersion = -1;
+        String header = "";
+        try {
+            dbVersion = getVersionField(in, "db");
+            csvVersion = getVersionField(in, "csv");
+            if ( dbVersion == 1 && csvVersion == 0) {
+                header = in.readLine();
+                if ( header != null ) {
+                    for (String element: header.split("\t")) {
+                        fields.add(element);
+                    }
+                    return true;
+                }
+            } else {
+                Log.w(TAG, "ALERT! VERSIONS!");
+            }
+        } catch (IOException e) {
+            Log.i(TAG, "In loadHeader(): Exception reading lines "+e.getMessage());
+        } catch (Exception e) {
+            Log.d(TAG, "In loadHeader(): Exception: " + e.getMessage());
+        }
+        return false;
     }
 
     private boolean populateCSV(OutputStreamWriter out, Vector<String> productFields,
@@ -150,5 +236,20 @@ public class OurShoppingListCSV {
             register += shopName+","+position+";";
         }
         return register;
+    }
+
+    private int getVersionField(BufferedReader in, String field) throws Exception {
+        String line = in.readLine();
+        if ( line.isEmpty() ) {
+            throw new Exception("Could not get the line");
+        }else if ( ! line.startsWith("# ")) {
+            throw new Exception("First line not understandable");
+        } else {
+            String[] elements = line.split(" ");
+            if ( elements[1].equals(field) ) {
+                return Integer.parseInt(elements[3]);
+            }
+        }
+        return -1;
     }
 }

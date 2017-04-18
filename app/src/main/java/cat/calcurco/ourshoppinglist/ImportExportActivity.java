@@ -95,6 +95,9 @@ public class ImportExportActivity extends AppCompatActivity {
             ImportExport importObj = new ImportExport();
             File directory = new File(directoryText.getText().toString());
             String fileName = filenameText.getText().toString();
+            if ( ! fileName.endsWith(".csv")) {
+                fileName += ".csv";
+            }
             if ( importObj.importDB2CSV(new File(directory, fileName)) ) {
                 Log.i(TAG, "In doImport(): Succeed");
             } else {
