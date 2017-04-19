@@ -1,5 +1,6 @@
 package OurShoppingListDataBase;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -8,9 +9,15 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.nio.Buffer;
 import java.util.Arrays;
 import java.util.Vector;
+
+import OurShoppingListObjs.Categories;
+import OurShoppingListObjs.Product;
+import OurShoppingListObjs.Category;
+import OurShoppingListObjs.Products;
+import OurShoppingListObjs.Shop;
+import OurShoppingListObjs.Shops;
 
 /**
  * Created by serguei on 22/03/17.
@@ -88,20 +95,95 @@ public class OurShoppingListCSV {
 
     /************************************** Internal methods  *************************************/
     private boolean processLine(String line, Vector<String> fields) {
+        // fixme: horrible but first approach
         String[] components = line.split("\t");
-        for (int i=0; i<components.length; i++) {
-            if ( fields.elementAt(i).equals("product") ) {
-                if (ourDB.isProductInDB(components[i])) {
-''
+        // about product
+        Product product = null;
+        String name;
+        boolean buy;
+        int howmany;
+        // about category
+        String categoryName;
+        boolean categoryExist;
+        Category category;
+        // about shops
+        String shopsLst;
+        String shopName;
+        boolean shopExist;
+        int inShopPosition;
+        Shop shop;
+
+        if ( fields.contains("product") ){
+            name = components[fields.indexOf("product")];
+            product = new Product(name);
+            Log.d(TAG, "processing product "+name);
+        }
+        if ( fields.contains("buy") ) {
+            buy = Integer.parseInt(components[fields.indexOf("buy")]) > 0 ? true : false;
+            if ( product.getBuy() != buy ) {
+                Log.d(TAG, "buy change for "+product.getName()
+                        +" from "+product.getBuy()+" to "+buy);
+                product.setBuy(buy);
+            } else {
+                Log.d(TAG, "buy doesn't change for "+product.getName());
+            }
+        }
+        if ( fields.contains("howmany") ) {
+            howmany = Integer.parseInt(components[fields.indexOf("howmany")]);
+            if ( product.getHowMany() != howmany ) {
+                Log.d(TAG, "howmany change for "+product.getName()
+                        +" from "+product.getHowMany()+" to "+howmany);
+                product.setHowMany(howmany);
+            } else {
+                Log.d(TAG, "howmany doesn't change for "+product.getName());
+            }
+        }
+        if ( fields.contains("category") ) {
+            categoryName = components[fields.indexOf("category")];
+            categoryExist = ourDB.isCategoryInDB(categoryName);
+            if ( ! product.getCategory().equals(categoryName) ) {
+                Log.d(TAG, "category change for "+product.getName()
+                        +" from "+product.getCategory()+" to "+categoryName);
+                category = new Category(categoryName);
+                if ( ! categoryExist ) {
+                    Categories.getInstance().add(category);
+                }
+                product.setCategoryId(category.getId());
+            } else {
+                Log.d(TAG, "category doesn't change for " + product.getName());
+            }
+        }
+        if ( fields.contains("shop") ) {
+            shopsLst = components[fields.indexOf("shop")];
+            for ( String shopWithPosition: shopsLst.split(";") ) {
+                String[] pair = shopWithPosition.split(",");
+                shopName = pair[0];
+                inShopPosition = Integer.parseInt(pair[1]);
+                shopExist = ourDB.isShopInDB(shopName);
+                shop = new Shop(shopName);
+                if ( ! shopExist ) {
+                    Shops.getInstance().add(shop);
+                }
+                if ( ! product.isInShop(shop) ) {
+                    Log.d(TAG, "product "+product.getName()+" not in shop "+shop.getName());
+                    product.assignShop(shop);
+                    product.setPoitionInShop(shop, inShopPosition);
+                } else if ( product.getPoitionInShop(shop) != inShopPosition) {
+                    Log.d(TAG, "product "+product.getName()
+                            +" change position in shop "+shop.getName()
+                            +" from "+product.getPoitionInShop(shop)+" to "+inShopPosition);
+                    product.setPoitionInShop(shop, inShopPosition);
+                } else {
+                    Log.d(TAG, "product "+product.getName()+" no changes for shop "+shop.getName());
                 }
             }
-
         }
+        Products products = Products.getInstance();
+        products.modify(product);
         return true;
     }
 
-
-
+    @Nullable
     private OutputStreamWriter prepareFile(File directory, String fileName) {
         OutputStreamWriter out = null;
         try {
@@ -128,6 +210,7 @@ public class OurShoppingListCSV {
         return out;
     }
 
+    @Nullable
     private BufferedReader openFile(File file) {
         BufferedReader in = null;
         try {

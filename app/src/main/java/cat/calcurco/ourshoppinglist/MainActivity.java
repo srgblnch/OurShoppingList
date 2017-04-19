@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     final static int NEW_PRODUCT_RESULT = 1;
     final static int MODIFY_PRODUCT_RESULT = 2;
     final static int SHOP_SELECTED = 3;
+    final static int IMPORTEXPORT = 4;
 
     protected Products products;
 
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
     public void launchImportExport(View view) {
         Intent intent = new Intent(this, ImportExportActivity.class);
         Log.d(TAG, "launchImportExport()");
-        startActivity(intent);
+        startActivityForResult(intent, IMPORTEXPORT);
     }
 
     public void launchCategories(View view) {
@@ -253,6 +254,9 @@ public class MainActivity extends AppCompatActivity {
                     launchGoShopping(shopId);
                 }
             }
+        } else if ( requestCode == IMPORTEXPORT ) {
+            Log.d(TAG, "end ImportExport");
+            updateProductsList(/*data*/);
         }
     }
 

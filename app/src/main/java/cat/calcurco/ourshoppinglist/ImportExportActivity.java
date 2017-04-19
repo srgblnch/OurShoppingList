@@ -100,13 +100,25 @@ public class ImportExportActivity extends AppCompatActivity {
             }
             if ( importObj.importDB2CSV(new File(directory, fileName)) ) {
                 Log.i(TAG, "In doImport(): Succeed");
+                Snackbar.make(findViewById(R.id.exporter), "Import succeed",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finish();
+                            }
+                        }).show();
+
             } else {
                 Log.e(TAG, "In doImport(): Failed");
+                Snackbar.make(findViewById(R.id.exporter), "Failed to recover from file",
+                        Snackbar.LENGTH_LONG).show();
             }
         } else {
             Snackbar.make(findViewById(R.id.exporter), "No read permission to proceed",
                     Snackbar.LENGTH_LONG).show();
         }
+
     }
 
     private void doExport() {
@@ -120,7 +132,14 @@ public class ImportExportActivity extends AppCompatActivity {
             if ( exportObj.exportDB2CSV(directory, fileName) ) {
                 Log.i(TAG, "In doExport(): Succeed");
                 Snackbar.make(findViewById(R.id.exporter), "Saved file",
-                        Snackbar.LENGTH_LONG).show();
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finish();
+                            }
+                        }).show();
+                finish();
             } else {
                 Log.e(TAG, "In doExport(): Failed");
                 Snackbar.make(findViewById(R.id.exporter), "Failed to store the file",
@@ -130,6 +149,7 @@ public class ImportExportActivity extends AppCompatActivity {
             Snackbar.make(findViewById(R.id.exporter), "No write permission to proceed",
                     Snackbar.LENGTH_LONG).show();
         }
+
     }
 
     private boolean requestRight(View who, final String rightCode, String explanation,
@@ -157,19 +177,19 @@ public class ImportExportActivity extends AppCompatActivity {
         return true;
     }
 
-    //@Override
-    public void OnRequestPermissionsResultCallback(int requestCode, String[] permissions,
-                                                   int[] grantResults){
-        Snackbar.make(findViewById(R.id.exporter),
-                "OnRequestPermissionsResultCallback("+requestCode+", "+permissions+", "+grantResults+")",
-                Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                                   int[] grantResults){
-        Snackbar.make(findViewById(R.id.exporter),
-                "onRequestPermissionsResult("+requestCode+", "+permissions+", "+grantResults+")",
-                Snackbar.LENGTH_LONG).show();
-    }
+//    //@Override
+//    public void OnRequestPermissionsResultCallback(int requestCode, String[] permissions,
+//                                                   int[] grantResults){
+//        Snackbar.make(findViewById(R.id.exporter),
+//                "OnRequestPermissionsResultCallback("+requestCode+", "+permissions+", "+grantResults+")",
+//                Snackbar.LENGTH_LONG).show();
+//    }
+//
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                                                   int[] grantResults){
+//        Snackbar.make(findViewById(R.id.exporter),
+//                "onRequestPermissionsResult("+requestCode+", "+permissions+", "+grantResults+")",
+//                Snackbar.LENGTH_LONG).show();
+//    }
 }
