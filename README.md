@@ -14,10 +14,13 @@ This is my first Android App and a reencouter with Java after almost two decades
   - [x] Short click: flip "buy" tick
   - [x] Long click: edit the product (like the new product view)
     - [x] Allow to set the product category
+      - [ ] Allow a direct creation of a new category
     - [x] Allow to set the shops where it can be bought
+      - [ ] Allow a direct creation of a new shop
     - [x] Select how many should be bought
     - [x] Allow to store a modified product as well as delete it
-    - [ ] Feature to have products to be bought only once (removed once bought)
+      - TODO: decide if autosave or cancel when control-back button
+    - [ ] Feature to have products to be bought only once ([logical] removed once bought)
     - [ ] Product picture
   - [ ] Barcode scan
   - [ ] Priority of a product to be bought (to provide info to ring the bell if one should go to a certain shop soon).
@@ -41,11 +44,11 @@ This is my first Android App and a reencouter with Java after almost two decades
   - [ ] Maintain the application above the screen lock while buying.
 - [x] SQLite internal database
   - [ ] Import/Export
-    - [ ] csv files
+    - [x] csv files
       - Columns: productName\tbuy\thowmany\tcategoryName\tshop,position;shop,position;...
-         - Example: Aigua\tTrue\t3\tAlimentació\tEroski,3;Caprabo,0
+         - Example: Product\tTrue\t3\tLebensmittel\tFleischerei,0;Supermarkt,3
     - [ ] json
-  - [ ] transactions (like log what is being made, needed for the sync with other devices later on)
+  - [ ] Transactions (like log what is being made, thought for the sync with other devices later on)
 - [ ] Multiple device synchronization
   - [ ] Via Bluetooth
   - [ ] Via a server
