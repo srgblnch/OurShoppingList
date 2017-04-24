@@ -32,7 +32,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 
-import OurShoppingListDataBase.DatabaseSingleton;
+import OurShoppingListDataBase.OurData;
 import OurShoppingListObjs.Product;
 import OurShoppingListObjs.Products;
 import OurShoppingListObjs.Shop;
@@ -75,7 +75,7 @@ public class ShopsSelectionActivity extends AppCompatActivity {
         adaptor.setOnItemClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseSingleton db = DatabaseSingleton.getInstance();
+                OurData db = OurData.getInstance();
                 Shop shop = shops.elementByPosition(recyclerView.getChildAdapterPosition(view));
                 CheckBox selected = (CheckBox) view.findViewById(R.id.shopCheckBox);
                 boolean isProductInShop = product.isInShop(shop);

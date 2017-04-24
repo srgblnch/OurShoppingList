@@ -36,9 +36,8 @@ import android.widget.TextView;
 
 import java.util.Vector;
 
-import OurShoppingListDataBase.DatabaseSingleton;
+import OurShoppingListDataBase.OurData;
 import OurShoppingListObjs.Product;
-import OurShoppingListObjs.Products;
 import OurShoppingListObjs.Shop;
 
 /**
@@ -63,7 +62,7 @@ public class Adaptor4ProductsInShop extends
         this.shop = shop;
         this.products = new Vector<Product>();
 
-        Vector<String> productsInShop = DatabaseSingleton.getInstance().getShopProducts(shop);
+        Vector<String> productsInShop = OurData.getInstance().getShopProducts(shop);
         Log.d(TAG, "products to buy in "+shop.getName()+": "+productsInShop);
         Product product;
 

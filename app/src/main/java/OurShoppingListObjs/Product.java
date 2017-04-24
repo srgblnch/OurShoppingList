@@ -27,7 +27,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import OurShoppingListDataBase.DatabaseSingleton;
+import OurShoppingListDataBase.OurData;
 
 /**
  * Created by serguei on 25/08/16.
@@ -60,7 +60,7 @@ public class Product extends OurShoppingListObj implements Comparable<Product> {
             this.name = cursor.getString(0);
             this.buy = (cursor.getInt(1) > 0);
             this.category = cursor.getInt(2);
-            String categoryName = DatabaseSingleton.getInstance().getCategory(this.category).getName();
+            String categoryName = OurData.getInstance().getCategory(this.category).getName();
             this.howmany = cursor.getInt(3);
             Log.d(TAG+"("+id+": "+name+")",
                     "buy = "+buy+", category = "+category+"("+categoryName+"), how many = "+howmany+"");
@@ -72,7 +72,7 @@ public class Product extends OurShoppingListObj implements Comparable<Product> {
         // FIXME: TBRemoved, force the howmany to be at least 1
 //        if (this.howmany <= 0) {
 //            this.howmany = 1;
-//            DatabaseSingleton.getInstance().modifyProduct(this);
+//            OurData.getInstance().modifyProduct(this);
 //        }
 
         //TODO: recover the shopsLst for this Product using the "Products_has_Shops" table
@@ -84,7 +84,7 @@ public class Product extends OurShoppingListObj implements Comparable<Product> {
      */
     public Product(String name) {
         super(name);
-        DatabaseSingleton db = DatabaseSingleton.getInstance();
+        OurData db = OurData.getInstance();
         if (db.isProductInDB(name)) {
             this.id = db.getProductId(name);
             Product tmp = db.getProduct(this.id);
@@ -105,7 +105,7 @@ public class Product extends OurShoppingListObj implements Comparable<Product> {
     public Product(String name, boolean buy, Integer category, Integer howmany) {
         // FIXME: to be extended as long as the ProductNewActivity has more widgets
         super(name);
-        DatabaseSingleton db = DatabaseSingleton.getInstance();
+        OurData db = OurData.getInstance();
         if (db.isProductInDB(name)) {
             Product tmp = new Product(name);
             this.buy = tmp.getBuy();
@@ -149,7 +149,7 @@ public class Product extends OurShoppingListObj implements Comparable<Product> {
 
     public void setBuy(boolean value) {
         this.buy = value;
-        DatabaseSingleton db = DatabaseSingleton.getInstance();
+        OurData db = OurData.getInstance();
         db.modifyProduct(this);
         //Product tmp = db.getProduct(this.id);
     }
@@ -162,25 +162,25 @@ public class Product extends OurShoppingListObj implements Comparable<Product> {
         if (category == -1) {
             return "";
         }
-        return DatabaseSingleton.getInstance().getCategory(category).getName();
+        return OurData.getInstance().getCategory(category).getName();
     }
 
     public void setCategoryId(Integer id) {
         this.category = id;
         if (id >= 0) {
-            DatabaseSingleton.getInstance().modifyProduct(this);
+            OurData.getInstance().modifyProduct(this);
         }
     }
 
     public void setCategory(String name) {
-        Category category = DatabaseSingleton.getInstance().getCategoryByName(name);
+        Category category = OurData.getInstance().getCategoryByName(name);
         Log.d(TAG+"("+id+": "+this.name+").setCategory("+name+")",
                 "category: "+category.getId()+", "+category.getName());
         if (category == null) {
             this.category = -1;
         } else {
             this.category = category.getId();
-            DatabaseSingleton.getInstance().modifyProduct(this);
+            OurData.getInstance().modifyProduct(this);
         }
     }
 
@@ -194,7 +194,7 @@ public class Product extends OurShoppingListObj implements Comparable<Product> {
     public void setHowMany(Integer value) {
         if (value > 0) {
             this.howmany = value;
-            DatabaseSingleton.getInstance().modifyProduct(this);
+            OurData.getInstance().modifyProduct(this);
         } else {
             Log.w(TAG+"("+id+": "+name+")",
                     "Ignoring too small assigment to how many.");
@@ -208,23 +208,23 @@ public class Product extends OurShoppingListObj implements Comparable<Product> {
 //    }
 //
     public boolean isInShop(Shop shop) {
-        return DatabaseSingleton.getInstance().isProductInShop(this, shop);
+        return OurData.getInstance().isProductInShop(this, shop);
     }
 
     public Integer getPoitionInShop(Shop shop) {
-        return DatabaseSingleton.getInstance().getProductPositionInShop(this, shop);
+        return OurData.getInstance().getProductPositionInShop(this, shop);
     }
 
     public void setPoitionInShop(Shop shop, Integer position) {
-        DatabaseSingleton.getInstance().setProductPositionInShop(this, shop, position);
+        OurData.getInstance().setProductPositionInShop(this, shop, position);
     }
 
     public void assignShop(Shop shop) {
-        DatabaseSingleton.getInstance().insertProductInShop(this, shop, 0);
+        OurData.getInstance().insertProductInShop(this, shop, 0);
     }
 
     public void unassignShop(Shop shop) {
-        DatabaseSingleton.getInstance().removeProductInShop(this, shop);
+        OurData.getInstance().removeProductInShop(this, shop);
     }
 //    /* done Shop information area */
     /******************************/

@@ -26,7 +26,7 @@ package OurShoppingListObjs;
 import android.content.Context;
 import android.util.Log;
 
-import OurShoppingListDataBase.DatabaseSingleton;
+import OurShoppingListDataBase.OurData;
 
 /**
  * Created by serguei on 03/10/16.
@@ -54,7 +54,7 @@ public class Shops implements OurLists {
         Log.d("Shops", "setContext(...)");
         if ( this.context == null ) {
             this.context = context;
-            DatabaseSingleton db = DatabaseSingleton.getInstance();
+            OurData db = OurData.getInstance();
             db.setContext(context);
             size = db.getNumberOfShops();
             if (size == 0) {
@@ -75,7 +75,7 @@ public class Shops implements OurLists {
         if (context == null) {
             return null;
         }
-        return DatabaseSingleton.getInstance().getShop(id);
+        return OurData.getInstance().getShop(id);
     }
 
     public Shop elementByPosition(Integer position) {
@@ -83,7 +83,7 @@ public class Shops implements OurLists {
         if (context == null) {
             return null;
         }
-        return DatabaseSingleton.getInstance().getShopByPosition(position);
+        return OurData.getInstance().getShopByPosition(position);
     }
 
     public Shop elementByName(String name){
@@ -91,7 +91,7 @@ public class Shops implements OurLists {
         if (context == null) {
             return null;
         }
-        return DatabaseSingleton.getInstance().getShopByName(name);
+        return OurData.getInstance().getShopByName(name);
     }
 
     // setters:
@@ -100,9 +100,9 @@ public class Shops implements OurLists {
         if (context == null) {
             return -1;
         }
-        Integer id = DatabaseSingleton.getInstance().insertShop((Shop) shop);
+        Integer id = OurData.getInstance().insertShop((Shop) shop);
         shop.setId(id);
-        size = DatabaseSingleton.getInstance().getNumberOfShops();
+        size = OurData.getInstance().getNumberOfShops();
         return id;
     }
 
@@ -111,7 +111,7 @@ public class Shops implements OurLists {
         if (context == null) {
             return false;
         }
-        return DatabaseSingleton.getInstance().modifyShop((Shop) shop);
+        return OurData.getInstance().modifyShop((Shop) shop);
     }
 
     public boolean remove(Integer id) {
@@ -120,8 +120,8 @@ public class Shops implements OurLists {
         if (context == null) {
             return false;
         }
-        removed = DatabaseSingleton.getInstance().removeShop(id);
-        size = DatabaseSingleton.getInstance().getNumberOfShops();
+        removed = OurData.getInstance().removeShop(id);
+        size = OurData.getInstance().getNumberOfShops();
         return removed;
     }
 
@@ -130,7 +130,7 @@ public class Shops implements OurLists {
         if (context == null) {
             return 0;
         }
-        return size;//DatabaseSingleton.getInstance().getNumberOfShops();
+        return size;//OurData.getInstance().getNumberOfShops();
     }
     /* done OurList area */
 }

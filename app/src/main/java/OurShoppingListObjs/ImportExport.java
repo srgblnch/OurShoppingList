@@ -2,7 +2,7 @@ package OurShoppingListObjs;
 
 import java.io.File;
 
-import OurShoppingListDataBase.DatabaseSingleton;
+import OurShoppingListDataBase.OurData;
 
 /**
  * Created by serguei on 24/03/17.
@@ -16,12 +16,12 @@ public class ImportExport {
     }
 
     public boolean exportDB2CSV(File directory, String fileName) {
-        DatabaseSingleton db = DatabaseSingleton.getInstance();
+        OurData db = OurData.getInstance();
         return db.exportDB2CSV(directory, fileName);
     }
 
     public boolean importDB2CSV(File file) {
-        DatabaseSingleton db = DatabaseSingleton.getInstance();
+        OurData db = OurData.getInstance();
         return db.importDB2CSV(file);
     }
 }

@@ -41,10 +41,10 @@ import OurShoppingListObjs.Shop;
  * Created by serguei on 18/09/16.
  */
 
-public class OurShoppingListDB extends SQLiteOpenHelper {
-    final static String TAG = "OurShoppingListDB";
+class OurDBStore extends SQLiteOpenHelper {
+    final static String TAG = "OurDBStore";
 
-    public OurShoppingListDB(Context context) {
+    public OurDBStore(Context context) {
         super(context, "OurShoppingList", null, 1);
         Log.d(TAG, "construtor");
     }
@@ -595,14 +595,14 @@ public class OurShoppingListDB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        Log.d("OurShoppingListDB", cursor.getCount()+" "+table+" with id "+id+" located in the database");
+        Log.d("OurDBStore", cursor.getCount()+" "+table+" with id "+id+" located in the database");
         if ( cursor.moveToFirst() ) {
             name = cursor.getString(0);
-            Log.d("OurShoppingListDB", "recovered "+id+": "+name);
+            Log.d("OurDBStore", "recovered "+id+": "+name);
         }
         cursor.close();
         db.close();
-        Log.d("OurShoppingListDB", "Query "+query+" done");
+        Log.d("OurDBStore", "Query "+query+" done");
         return name;
     }
 

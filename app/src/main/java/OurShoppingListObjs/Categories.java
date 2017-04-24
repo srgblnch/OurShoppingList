@@ -26,7 +26,7 @@ package OurShoppingListObjs;
 import android.content.Context;
 import android.util.Log;
 
-import OurShoppingListDataBase.DatabaseSingleton;
+import OurShoppingListDataBase.OurData;
 
 /**
  * Created by serguei on 03/10/16.
@@ -54,7 +54,7 @@ public class Categories implements OurLists {
         Log.d("Categories", "setContext(...)");
         if ( this.context == null ) {
             this.context = context;
-            DatabaseSingleton db = DatabaseSingleton.getInstance();
+            OurData db = OurData.getInstance();
             db.setContext(context);
             size = db.getNumberOfCategories();
             if (size == 0) {
@@ -75,7 +75,7 @@ public class Categories implements OurLists {
         if (context == null) {
             return null;
         }
-        return DatabaseSingleton.getInstance().getCategory(id);
+        return OurData.getInstance().getCategory(id);
     }
 
     public Category elementByPosition(Integer position) {
@@ -83,7 +83,7 @@ public class Categories implements OurLists {
         if (context == null) {
             return null;
         }
-        return DatabaseSingleton.getInstance().getCategoryByPosition(position);
+        return OurData.getInstance().getCategoryByPosition(position);
     }
 
     public Category elementByName(String name){
@@ -91,7 +91,7 @@ public class Categories implements OurLists {
         if (context == null) {
             return null;
         }
-        return DatabaseSingleton.getInstance().getCategoryByName(name);
+        return OurData.getInstance().getCategoryByName(name);
     }
 
     // setters:
@@ -100,9 +100,9 @@ public class Categories implements OurLists {
         if (context == null) {
             return -1;
         }
-        Integer id = DatabaseSingleton.getInstance().insertCategory((Category) category);
+        Integer id = OurData.getInstance().insertCategory((Category) category);
         category.setId(id);
-        size = DatabaseSingleton.getInstance().getNumberOfCategories();
+        size = OurData.getInstance().getNumberOfCategories();
         return id;
     }
 
@@ -111,7 +111,7 @@ public class Categories implements OurLists {
         if (context == null) {
             return false;
         }
-        return DatabaseSingleton.getInstance().modifyCategory((Category) category);
+        return OurData.getInstance().modifyCategory((Category) category);
     }
 
     public boolean remove(Integer id) {
@@ -120,8 +120,8 @@ public class Categories implements OurLists {
         if (context == null) {
             return false;
         }
-        removed = DatabaseSingleton.getInstance().removeCategory(id);
-        size = DatabaseSingleton.getInstance().getNumberOfCategories();
+        removed = OurData.getInstance().removeCategory(id);
+        size = OurData.getInstance().getNumberOfCategories();
         return removed;
     }
 
@@ -130,7 +130,7 @@ public class Categories implements OurLists {
         if (context == null) {
             return 0;
         }
-        return size;//DatabaseSingleton.getInstance().getNumberOfCategories();
+        return size;//OurData.getInstance().getNumberOfCategories();
     }
     /* done OurList area */
 }

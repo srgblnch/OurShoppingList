@@ -27,7 +27,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import OurShoppingListDataBase.DatabaseSingleton;
+import OurShoppingListDataBase.OurData;
 
 /**
  * Created by serguei on 25/08/16.
@@ -58,7 +58,7 @@ public class Shop extends OurShoppingListObj implements Comparable<Shop> {
 
     public Shop(String name) {
         super(name);
-        DatabaseSingleton db = DatabaseSingleton.getInstance();
+        OurData db = OurData.getInstance();
         if (db.isShopInDB(name)) {
             this.id = db.getShopId(name);
             Shop tmp = db.getShop(this.id);

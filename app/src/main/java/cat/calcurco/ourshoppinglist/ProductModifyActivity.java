@@ -34,7 +34,7 @@ import android.view.View;
 
 import java.util.Vector;
 
-import OurShoppingListDataBase.DatabaseSingleton;
+import OurShoppingListDataBase.OurData;
 import OurShoppingListObjs.Categories;
 import OurShoppingListObjs.Category;
 import OurShoppingListObjs.Product;
@@ -57,7 +57,7 @@ public class ProductModifyActivity extends ProductNewActivity {
         buyCheckBox.setChecked(extras.getBoolean("buy"));
         howMany.setText(String.valueOf(extras.getInt("howmany")));
         // FIXME: review this mesh
-        DatabaseSingleton db = DatabaseSingleton.getInstance();
+        OurData db = OurData.getInstance();
         Categories categories = Categories.getInstance();
         Integer categoryId = extras.getInt("category");
         Category category = categories.elementById(categoryId);

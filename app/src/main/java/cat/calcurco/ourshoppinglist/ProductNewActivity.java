@@ -40,7 +40,7 @@ import android.widget.TextView;
 
 import java.util.Vector;
 
-import OurShoppingListDataBase.DatabaseSingleton;
+import OurShoppingListDataBase.OurData;
 import OurShoppingListObjs.Categories;
 import OurShoppingListObjs.Product;
 import OurShoppingListObjs.Products;
@@ -76,7 +76,7 @@ public class ProductNewActivity extends AppCompatActivity {
         more = (Button) findViewById(R.id.more);
 
         buyCheckBox.setChecked(true);
-        DatabaseSingleton db = DatabaseSingleton.getInstance();
+        OurData db = OurData.getInstance();
         if (db.getNumberOfCategories() == 0) {  // No categories at all
             categorySpinner.setVisibility(View.GONE);
         } else {

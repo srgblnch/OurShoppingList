@@ -36,17 +36,17 @@ import OurShoppingListObjs.Shop;
 /**
  * Created by serguei on 18/09/16.
  */
-public class DatabaseSingleton {
-    private static DatabaseSingleton ourInstance = new DatabaseSingleton();
+public class OurData {
+    private static OurData ourInstance = new OurData();
     private Context context = null;
-    private OurShoppingListDB db;
+    private OurDBStore db;
 
-    public static DatabaseSingleton getInstance() {
+    public static OurData getInstance() {
         return ourInstance;
     }
 
-    private DatabaseSingleton() {
-        Log.d("DatabaseSingleton", "Constructor");
+    private OurData() {
+        Log.d("OurData", "Constructor");
     }
 
     public Context getContext() {
@@ -54,21 +54,21 @@ public class DatabaseSingleton {
     }
 
     public void setContext(Context context) {
-        Log.d("DatabaseSingleton", "setContext(...)");
+        Log.d("OurData", "setContext(...)");
         if ( this.context == null ) {
             this.context = context;
-            db = new OurShoppingListDB(context);
+            db = new OurDBStore(context);
         } else {
-            Log.w("DatabaseSingleton", "Try to assign context when it already was!");
+            Log.w("OurData", "Try to assign context when it already was!");
         }
     }
 
     /***************************************** Products area *****************************************/
 
     public Product getProduct(Integer id) {
-        Log.d("DatabaseSingleton", "getProduct("+id+")");
+        Log.d("OurData", "getProduct("+id+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.getProductObj(id);
@@ -76,50 +76,50 @@ public class DatabaseSingleton {
 
     public Product getProductByPosition(Integer position) {
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         String name = db.getProductNames().get(position);
-        Log.d("DatabaseSingleton", "getProductByPosition("+position+")");
+        Log.d("OurData", "getProductByPosition("+position+")");
         return db.getProductObj(name);
     }
 
     public Product getProductByName(String name) {
-        Log.d("DatabaseSingleton", "getProductByName("+name+")");
+        Log.d("OurData", "getProductByName("+name+")");
         return db.getProductObj(name);
     }
 
     public boolean isProductInDB(String name) {
-        Log.d("DatabaseSingleton", "isProductInDB("+name+")");
+        Log.d("OurData", "isProductInDB("+name+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         return db.isProductInDB(name);
     }
 
     public Integer getProductId(String name) {
-        Log.d("DatabaseSingleton", "getProductId("+name+")");
+        Log.d("OurData", "getProductId("+name+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
         return db.getProductId(name);
     }
 
     public Integer insertProduct(Product obj) {
-        Log.d("DatabaseSingleton", "insertProduct("+obj.getName()+")");
+        Log.d("OurData", "insertProduct("+obj.getName()+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
         return db.insertProductObj(obj);
     }
 
     public boolean modifyProduct(Product obj) {
-        Log.d("DatabaseSingleton", "modifyProduct("+obj.getId()+")");
+        Log.d("OurData", "modifyProduct("+obj.getId()+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         //return db.modifyProductObj(obj);
@@ -129,18 +129,18 @@ public class DatabaseSingleton {
     }
 
     public boolean removeProduct(Integer id) {
-        Log.d("DatabaseSingleton", "removeProduct("+id+")");
+        Log.d("OurData", "removeProduct("+id+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         return db.removeProductObj(id);
     }
 
     public Integer getNumberOfProducts() {
-        Log.d("DatabaseSingleton", "getNumberOfProducts()");
+        Log.d("OurData", "getNumberOfProducts()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return 0;
         }
         Vector<String> elementsLst = db.getProductNames();
@@ -148,9 +148,9 @@ public class DatabaseSingleton {
     }
 
     public Vector<String> getProductNames() {
-        Log.d("DatabaseSingleton", "getCategoryNames()");
+        Log.d("OurData", "getCategoryNames()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.getProductNames();
@@ -158,7 +158,7 @@ public class DatabaseSingleton {
 
     public void _populateProducts() {
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return;
         }
         db._populateProducts();
@@ -168,7 +168,7 @@ public class DatabaseSingleton {
 
     public Category getCategory(Integer id) {
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.getCategoryObj(id);
@@ -176,54 +176,54 @@ public class DatabaseSingleton {
 
     public Category getCategoryByPosition(Integer position) {
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         String name = db.getCategoryNames().get(position);
-        Log.d("DatabaseSingleton", "getCategoryByPosition("+position+")");
+        Log.d("OurData", "getCategoryByPosition("+position+")");
         return db.getCategoryObj(name);
     }
 
     public Category getCategoryByName(String name) {
-        Log.d("DatabaseSingleton", "getShopByName("+name+")");
+        Log.d("OurData", "getShopByName("+name+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.getCategoryObj(name);
     }
 
     public boolean isCategoryInDB(String name) {
-        Log.d("DatabaseSingleton", "isCategoryInDB("+name+")");
+        Log.d("OurData", "isCategoryInDB("+name+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         return db.isCategoryInDB(name);
     }
 
     public Integer getCategoryId(String name) {
-        Log.d("DatabaseSingleton", "getCategoryId("+name+")");
+        Log.d("OurData", "getCategoryId("+name+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
         return db.getCategoryId(name);
     }
 
     public Integer insertCategory(Category obj) {
-        Log.d("DatabaseSingleton", "insertCategory("+obj.getName()+")");
+        Log.d("OurData", "insertCategory("+obj.getName()+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
         return db.insertCategoryObj(obj);
     }
 
     public boolean modifyCategory(Category obj) {
-        Log.d("DatabaseSingleton", "modifyCategory("+obj.getId()+")");
+        Log.d("OurData", "modifyCategory("+obj.getId()+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         //return db.modifyCategoryObj(obj);
@@ -233,18 +233,18 @@ public class DatabaseSingleton {
     }
 
     public boolean removeCategory(Integer id) {
-        Log.d("DatabaseSingleton", "removeCategory("+id+")");
+        Log.d("OurData", "removeCategory("+id+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         return db.removeCategoryObj(id);
     }
 
     public Integer getNumberOfCategories() {
-        Log.d("DatabaseSingleton", "getNumberOfCategories()");
+        Log.d("OurData", "getNumberOfCategories()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return 0;
         }
         Vector<String> categoriesLst = db.getCategoryNames();
@@ -252,9 +252,9 @@ public class DatabaseSingleton {
     }
 
     public Vector<String> getCategoryNames() {
-        Log.d("DatabaseSingleton", "getCategoryNames()");
+        Log.d("OurData", "getCategoryNames()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.getCategoryNames();
@@ -262,7 +262,7 @@ public class DatabaseSingleton {
 
     public void _populateCategories() {
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return;
         }
         db._populateCategories();
@@ -272,7 +272,7 @@ public class DatabaseSingleton {
 
     public Shop getShop(Integer id) {
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.getShopObj(id);
@@ -280,54 +280,54 @@ public class DatabaseSingleton {
 
     public Shop getShopByPosition(Integer position) {
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         String name = db.getShopNames().get(position);
-        Log.d("DatabaseSingleton", "getShopByPosition("+position+")");
+        Log.d("OurData", "getShopByPosition("+position+")");
         return db.getShopObj(name);
     }
 
     public Shop getShopByName(String name) {
-        Log.d("DatabaseSingleton", "getShopByName("+name+")");
+        Log.d("OurData", "getShopByName("+name+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.getShopObj(name);
     }
 
     public boolean isShopInDB(String name) {
-        Log.d("DatabaseSingleton", "isShopInDB("+name+")");
+        Log.d("OurData", "isShopInDB("+name+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         return db.isShopInDB(name);
     }
 
     public Integer getShopId(String name) {
-        Log.d("DatabaseSingleton", "getShopId("+name+")");
+        Log.d("OurData", "getShopId("+name+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
         return db.getShopId(name);
     }
 
     public Integer insertShop(Shop obj) {
-        Log.d("DatabaseSingleton", "insertShop("+obj.getName()+")");
+        Log.d("OurData", "insertShop("+obj.getName()+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
         return db.insertShopObj(obj);
     }
 
     public boolean modifyShop(Shop obj) {
-        Log.d("DatabaseSingleton", "modifyShop("+obj.getId()+")");
+        Log.d("OurData", "modifyShop("+obj.getId()+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         //return db.modifyShopObj(obj);
@@ -337,18 +337,18 @@ public class DatabaseSingleton {
     }
 
     public boolean removeShop(Integer id) {
-        Log.d("DatabaseSingleton", "removeShop("+id+")");
+        Log.d("OurData", "removeShop("+id+")");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         return db.removeShopObj(id);
     }
 
     public Integer getNumberOfShops() {
-        Log.d("DatabaseSingleton", "getNumberOfShop()");
+        Log.d("OurData", "getNumberOfShop()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return 0;
         }
         Vector<String> shopsLst = db.getShopNames();
@@ -356,9 +356,9 @@ public class DatabaseSingleton {
     }
 
     public Vector<String> getShopNames() {
-        Log.d("DatabaseSingleton", "getShopNames()");
+        Log.d("OurData", "getShopNames()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.getShopNames();
@@ -366,7 +366,7 @@ public class DatabaseSingleton {
 
     public void _populateShops() {
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return;
         }
         db._populateShops();
@@ -375,63 +375,63 @@ public class DatabaseSingleton {
     /***************************** Products may have some shops assigned *****************************/
 
     public Vector<String> getShopProducts(Shop shop) {
-        Log.d("DatabaseSingleton", "getShopProducts()");
+        Log.d("OurData", "getShopProducts()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.getShopProducts(shop);
     }
 
     public boolean isProductInShop(Product product, Shop shop) {
-        Log.d("DatabaseSingleton", "isProductInShop()");
+        Log.d("OurData", "isProductInShop()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         return db.isProductInShop(product, shop);
     }
 
     public Integer getProductPositionInShop(Product product, Shop shop) {
-        Log.d("DatabaseSingleton", "getProductPositionInShop()");
+        Log.d("OurData", "getProductPositionInShop()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.productPositionInShop(product, shop);
     }
 
     public boolean setProductPositionInShop(Product product, Shop shop, Integer position) {
-        Log.d("DatabaseSingleton", "setProductPositionInShop()");
+        Log.d("OurData", "setProductPositionInShop()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         return db.modifyProductInShopPosition(product, shop, position);
     }
 
     public Integer insertProductInShop(Product product, Shop shop, Integer position) {
-        Log.d("DatabaseSingleton", "insertProductInShop()");
+        Log.d("OurData", "insertProductInShop()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
         return db.insertProductInShop(product, shop, position);
     }
 
     public boolean modifyProductInShopPosition(Product product, Shop shop, Integer position) {
-        Log.d("DatabaseSingleton", "modifyProductInShopPosition()");
+        Log.d("OurData", "modifyProductInShopPosition()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         return db.modifyProductInShopPosition(product, shop, position);
     }
 
     public boolean removeProductInShop(Product product, Shop shop) {
-        Log.d("DatabaseSingleton", "removeProductInShop()");
+        Log.d("OurData", "removeProductInShop()");
         if (db == null) {
-            Log.e("DatabaseSingleton", "database not ready, set the context first!!");
+            Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
         return db.removeProductInShop(product, shop);
@@ -439,13 +439,15 @@ public class DatabaseSingleton {
 
     /********************************** Import/export methods  ************************************/
 
+    // TODO: distinguish between different formats (when more than one possible)
+
     public boolean exportDB2CSV(File directory, String fileName) {
-        OurShoppingListCSV csv = new OurShoppingListCSV(db);
-        return csv.exportDB2CSV(directory, fileName);
+        OurCSVGenerator csv = new OurCSVGenerator(db);
+        return csv.doExport(directory, fileName);
     }
 
     public boolean importDB2CSV(File file) {
-        OurShoppingListCSV csv = new OurShoppingListCSV(db);
-        return csv.importDB2CSV(file);
+        OurCSVGenerator csv = new OurCSVGenerator(db);
+        return csv.doImport(file);
     }
 }
