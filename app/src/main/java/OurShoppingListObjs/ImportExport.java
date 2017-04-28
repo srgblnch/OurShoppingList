@@ -17,12 +17,12 @@ public class ImportExport {
 
     public boolean exportDB2CSV(File directory, String fileName) {
         OurData db = OurData.getInstance();
-        return db.exportDB2CSV(directory, fileName);
+        return db.doExport("csv", directory, fileName);
     }
 
     public boolean importDB2CSV(File file) {
         OurData db = OurData.getInstance();
-        return db.importDB2CSV(file);
+        return db.doImport("csv", file);
     }
 }
 

@@ -165,7 +165,7 @@ class OurCSVImporter {
         }
         if ( fields.contains("category") ) {
             categoryName = components[fields.indexOf("category")];
-            categoryExist = ourDB.isCategoryInDB(categoryName);
+            categoryExist = ourDB.getCategoriesTable().isCategoryInDB(categoryName);
             if ( ! product.getCategory().equals(categoryName) ) {
                 Log.d(TAG, "category change for "+product.getName()
                         +" from "+product.getCategory()+" to "+categoryName);
@@ -184,7 +184,7 @@ class OurCSVImporter {
                 String[] pair = shopWithPosition.split(",");
                 shopName = pair[0];
                 inShopPosition = Integer.parseInt(pair[1]);
-                shopExist = ourDB.isShopInDB(shopName);
+                shopExist = ourDB.getShopsTable().isShopInDB(shopName);
                 shop = new Shop(shopName);
                 if ( ! shopExist ) {
                     Shops.getInstance().add(shop);

@@ -27,7 +27,7 @@ class OurCSVExporter {
         Log.d(TAG, "doExport(" + directory.getAbsolutePath() + ", " + fileName + ")");
 
         boolean returnCode = true;
-        Vector<String> productFields = ourDB.getProductFields();
+        Vector<String> productFields = ourDB.getProductsTable().getProductFields();
         Vector<String> productLinks = new Vector<String>(Arrays.asList("category", "shop"));
         OutputStreamWriter out = null;
 
@@ -103,10 +103,10 @@ class OurCSVExporter {
                                 Vector<String> productLinks) {
         String line = "";
 
-        for (String productName : ourDB.getProductNames()) {
+        for (String productName : ourDB.getProductsTable().getProductNames()) {
             line = productName+"\t";
             for (String field : productFields) {
-                line += ourDB.getProductField(productName, field);
+                line += ourDB.getProductsTable().getProductField(productName, field);
                 line += "\t";
             }
             for (String link : productLinks) {
@@ -128,20 +128,20 @@ class OurCSVExporter {
     }
 
     private String solveCategory(String productName) {
-        int categoryId = Integer.parseInt(ourDB.getProductField(productName, "category"));
-        return ourDB.getCategoryName(categoryId);
+        int categoryId = Integer.parseInt(ourDB.getProductsTable().getProductField(productName, "category"));
+        return ourDB.getCategoriesTable().getCategoryName(categoryId);
     }
 
     private String solveShop(String  productName) {
         String register = "";
-        int productId = ourDB.getProductId(productName);
-        Vector<String> shops = ourDB.getProductShops(productName);
+        int productId = ourDB.getProductsTable().getProductId(productName);
+        Vector<String> shops = ourDB.getProductsTable().getProductShops(productName);
         int shopId;
         int position;
 
         for (String shopName : shops) {
-            shopId = ourDB.getShopId(shopName);
-            position = ourDB.productPositionInShop(productName, productId, shopName, shopId);
+            shopId = ourDB.getShopsTable().getShopId(shopName);
+            position = ourDB.getProductShopTable().productPositionInShop(productName, productId, shopName, shopId);
             register += shopName+","+position+";";
         }
         return register;

@@ -71,7 +71,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.getProductObj(id);
+        return db.getProductsTable().getProductObj(id);
     }
 
     public Product getProductByPosition(Integer position) {
@@ -79,14 +79,14 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        String name = db.getProductNames().get(position);
+        String name = db.getProductsTable().getProductNames().get(position);
         Log.d("OurData", "getProductByPosition("+position+")");
-        return db.getProductObj(name);
+        return db.getProductsTable().getProductObj(name);
     }
 
     public Product getProductByName(String name) {
         Log.d("OurData", "getProductByName("+name+")");
-        return db.getProductObj(name);
+        return db.getProductsTable().getProductObj(name);
     }
 
     public boolean isProductInDB(String name) {
@@ -95,7 +95,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
-        return db.isProductInDB(name);
+        return db.getProductsTable().isProductInDB(name);
     }
 
     public Integer getProductId(String name) {
@@ -104,7 +104,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
-        return db.getProductId(name);
+        return db.getProductsTable().getProductId(name);
     }
 
     public Integer insertProduct(Product obj) {
@@ -113,7 +113,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
-        return db.insertProductObj(obj);
+        return db.getProductsTable().insert(obj);
     }
 
     public boolean modifyProduct(Product obj) {
@@ -123,7 +123,7 @@ public class OurData {
             return false;
         }
         //return db.modifyProductObj(obj);
-        boolean res = db.modifyProductObj(obj);
+        boolean res = db.getProductsTable().modify(obj);
         Product tmp = new Product(obj.getId(), db.getReadableDatabase());
         return res;
     }
@@ -134,7 +134,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
-        return db.removeProductObj(id);
+        return db.getProductsTable().remove(id);
     }
 
     public Integer getNumberOfProducts() {
@@ -143,7 +143,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return 0;
         }
-        Vector<String> elementsLst = db.getProductNames();
+        Vector<String> elementsLst = db.getProductsTable().getProductNames();
         return elementsLst.size();
     }
 
@@ -153,7 +153,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.getProductNames();
+        return db.getProductsTable().getProductNames();
     }
 
     public void _populateProducts() {
@@ -161,7 +161,6 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return;
         }
-        db._populateProducts();
     }
 
     /************************************** Categories area  **************************************/
@@ -171,7 +170,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.getCategoryObj(id);
+        return db.getCategoriesTable().getCategoryObj(id);
     }
 
     public Category getCategoryByPosition(Integer position) {
@@ -179,9 +178,9 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        String name = db.getCategoryNames().get(position);
+        String name = db.getCategoriesTable().getCategoryNames().get(position);
         Log.d("OurData", "getCategoryByPosition("+position+")");
-        return db.getCategoryObj(name);
+        return db.getCategoriesTable().getCategoryObj(name);
     }
 
     public Category getCategoryByName(String name) {
@@ -190,7 +189,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.getCategoryObj(name);
+        return db.getCategoriesTable().getCategoryObj(name);
     }
 
     public boolean isCategoryInDB(String name) {
@@ -199,7 +198,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
-        return db.isCategoryInDB(name);
+        return db.getCategoriesTable().isCategoryInDB(name);
     }
 
     public Integer getCategoryId(String name) {
@@ -208,7 +207,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
-        return db.getCategoryId(name);
+        return db.getCategoriesTable().getCategoryId(name);
     }
 
     public Integer insertCategory(Category obj) {
@@ -217,7 +216,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
-        return db.insertCategoryObj(obj);
+        return db.getCategoriesTable().insert(obj);
     }
 
     public boolean modifyCategory(Category obj) {
@@ -227,7 +226,7 @@ public class OurData {
             return false;
         }
         //return db.modifyCategoryObj(obj);
-        boolean res = db.modifyCategoryObj(obj);
+        boolean res = db.getCategoriesTable().modify(obj);
         Category tmp = new Category(obj.getId(), db.getReadableDatabase());
         return res;
     }
@@ -238,7 +237,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
-        return db.removeCategoryObj(id);
+        return db.getCategoriesTable().remove(id);
     }
 
     public Integer getNumberOfCategories() {
@@ -247,7 +246,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return 0;
         }
-        Vector<String> categoriesLst = db.getCategoryNames();
+        Vector<String> categoriesLst = db.getCategoriesTable().getCategoryNames();
         return categoriesLst.size();
     }
 
@@ -257,7 +256,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.getCategoryNames();
+        return db.getCategoriesTable().getCategoryNames();
     }
 
     public void _populateCategories() {
@@ -265,7 +264,6 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return;
         }
-        db._populateCategories();
     }
 
     /***************************************** Shops area *****************************************/
@@ -275,7 +273,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.getShopObj(id);
+        return db.getShopsTable().getShopObj(id);
     }
 
     public Shop getShopByPosition(Integer position) {
@@ -283,9 +281,9 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        String name = db.getShopNames().get(position);
+        String name = db.getShopsTable().getShopNames().get(position);
         Log.d("OurData", "getShopByPosition("+position+")");
-        return db.getShopObj(name);
+        return db.getShopsTable().getShopObj(name);
     }
 
     public Shop getShopByName(String name) {
@@ -294,7 +292,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.getShopObj(name);
+        return db.getShopsTable().getShopObj(name);
     }
 
     public boolean isShopInDB(String name) {
@@ -303,7 +301,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
-        return db.isShopInDB(name);
+        return db.getShopsTable().isShopInDB(name);
     }
 
     public Integer getShopId(String name) {
@@ -312,7 +310,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
-        return db.getShopId(name);
+        return db.getShopsTable().getShopId(name);
     }
 
     public Integer insertShop(Shop obj) {
@@ -321,7 +319,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return -1;
         }
-        return db.insertShopObj(obj);
+        return db.getShopsTable().insert(obj);
     }
 
     public boolean modifyShop(Shop obj) {
@@ -331,7 +329,7 @@ public class OurData {
             return false;
         }
         //return db.modifyShopObj(obj);
-        boolean res = db.modifyShopObj(obj);
+        boolean res = db.getShopsTable().modify(obj);
         Shop tmp = new Shop(obj.getId(), db.getReadableDatabase());
         return res;
     }
@@ -342,7 +340,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
-        return db.removeShopObj(id);
+        return db.getShopsTable().remove(id);
     }
 
     public Integer getNumberOfShops() {
@@ -351,7 +349,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return 0;
         }
-        Vector<String> shopsLst = db.getShopNames();
+        Vector<String> shopsLst = db.getShopsTable().getShopNames();
         return shopsLst.size();
     }
 
@@ -361,7 +359,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.getShopNames();
+        return db.getShopsTable().getShopNames();
     }
 
     public void _populateShops() {
@@ -369,7 +367,6 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return;
         }
-        db._populateShops();
     }
 
     /***************************** Products may have some shops assigned *****************************/
@@ -380,7 +377,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.getShopProducts(shop);
+        return db.getProductShopTable().getShopProducts(shop);
     }
 
     public boolean isProductInShop(Product product, Shop shop) {
@@ -389,7 +386,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
-        return db.isProductInShop(product, shop);
+        return db.getProductShopTable().isProductInShop(product, shop);
     }
 
     public Integer getProductPositionInShop(Product product, Shop shop) {
@@ -398,7 +395,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.productPositionInShop(product, shop);
+        return db.getProductShopTable().productPositionInShop(product, shop);
     }
 
     public boolean setProductPositionInShop(Product product, Shop shop, Integer position) {
@@ -407,7 +404,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
-        return db.modifyProductInShopPosition(product, shop, position);
+        return db.getProductShopTable().modify(product, shop, position);
     }
 
     public Integer insertProductInShop(Product product, Shop shop, Integer position) {
@@ -416,7 +413,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return null;
         }
-        return db.insertProductInShop(product, shop, position);
+        return db.getProductShopTable().insert(product, shop, position);
     }
 
     public boolean modifyProductInShopPosition(Product product, Shop shop, Integer position) {
@@ -425,7 +422,7 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
-        return db.modifyProductInShopPosition(product, shop, position);
+        return db.getProductShopTable().modify(product, shop, position);
     }
 
     public boolean removeProductInShop(Product product, Shop shop) {
@@ -434,20 +431,29 @@ public class OurData {
             Log.e("OurData", "database not ready, set the context first!!");
             return false;
         }
-        return db.removeProductInShop(product, shop);
+        return db.getProductShopTable().remove(product, shop);
     }
 
     /********************************** Import/export methods  ************************************/
 
     // TODO: distinguish between different formats (when more than one possible)
 
-    public boolean exportDB2CSV(File directory, String fileName) {
-        OurCSVGenerator csv = new OurCSVGenerator(db);
-        return csv.doExport(directory, fileName);
+    public boolean doExport(String format, File destination, String name) {
+        if ( format.equals("csv")) {
+            OurPorterCSV csv = new OurPorterCSV(db);
+            csv.setDestination(destination);
+            csv.setFileName(name);
+            return csv.doExport();
+        }
+        return false;
     }
 
-    public boolean importDB2CSV(File file) {
-        OurCSVGenerator csv = new OurCSVGenerator(db);
-        return csv.doImport(file);
+    public boolean doImport(String format, File file) {
+        if ( format.equals("csv")) {
+            OurPorterCSV csv = new OurPorterCSV(db);
+            csv.setDestination(file);
+            return csv.doImport();
+        }
+        return false;
     }
 }
