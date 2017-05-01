@@ -18,7 +18,7 @@ abstract class OurTable {
         this.db = db;
     }
     /**** table generation ****/
-    abstract protected void createTable(SQLiteDatabase db);
+    abstract protected void createTable(SQLiteDatabase sqlite);
     /**** Table manipulation methods ****/
     abstract protected Integer insert(OurShoppingListObj obj);
     abstract protected boolean modify(OurShoppingListObj obj);

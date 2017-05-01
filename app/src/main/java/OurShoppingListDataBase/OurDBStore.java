@@ -110,11 +110,13 @@ class OurDBStore extends SQLiteOpenHelper {
     }
 
     protected boolean tableExist(String tableName) {
-        String query = "SELECT name FROM sqlite_master WHERE type='table' AND name='"+tableName+"';";
+        //String query = "SELECT name FROM sqlite_master WHERE type='table' AND name='"+tableName+"';";
+        String query = "SELECT name FROM sqlite_master WHERE type='table' AND name = '?'";
         boolean exist;
 
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
+        //Cursor cursor = db.rawQuery(query, new String[] {tableName});
+        Cursor cursor = db.query("sqlite_master", new String[] {"name"}, "type='table'", null, null, null, null);
         if ( cursor.moveToFirst() ){
             exist = true;
             Log.d(TAG, "table "+tableName+" found");
@@ -138,14 +140,17 @@ class OurDBStore extends SQLiteOpenHelper {
     }
 
     protected Integer getIdFromName(String table, String name) {
+        name = name.replaceAll("'", "''");  // protection for names with apostrophe
         Log.d(TAG, "getIdFromName("+table+","+name+")");
-        String query = "SELECT id FROM "+table+" WHERE name LIKE '"+name+"'";
+        //String query = "SELECT id FROM "+table+" WHERE name LIKE '"+name+"'";
+        String query = "SELECT id FROM ? WHERE name LIKE '?'";
         Integer id = -1;
 
         if ( tableExist(table) ) {
             SQLiteDatabase db = getReadableDatabase();
             Log.w(TAG, "Query '" + query + "' is going to be launched");
-            Cursor cursor = db.rawQuery(query, null);
+            //Cursor cursor = db.rawQuery(query, new String[] {table, name});
+            Cursor cursor = db.query(table, new String[] {"id"}, "name Like '?'", new String[] {name}, null, null, null);
             Log.d(TAG, cursor.getCount() + " '" + table + "' with name '" + name + "' located in the database");
             if (cursor.moveToNext()) {
                 id = cursor.getInt(0);
@@ -163,11 +168,13 @@ class OurDBStore extends SQLiteOpenHelper {
     }
 
     protected String getNameFromId(String table, Integer id) {
-        String query = "SELECT name FROM "+table+" WHERE id == "+id;
+        //String query = "SELECT name FROM "+table+" WHERE id == "+id;
+        String query = "SELECT name FROM ? WHERE id == ?";
         String name = null;
 
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
+        //Cursor cursor = db.rawQuery(query, new String[] {table, ""+id});
+        Cursor cursor = db.query(table, new String[] {"name"}, "id == ?", new String[] {""+id}, null, null, null);
         Log.d("OurDBStore", cursor.getCount()+" "+table+" with id "+id+" located in the database");
         if ( cursor.moveToFirst() ) {
             name = cursor.getString(0);
@@ -180,13 +187,15 @@ class OurDBStore extends SQLiteOpenHelper {
     }
 
     protected String getFieldFromName(String table, String field, String name) {
-        String query = "SELECT "+field+" FROM "+table+" WHERE name LIKE '"+name+"'";
+        //String query = "SELECT "+field+" FROM "+table+" WHERE name LIKE '"+name+"'";
+        String query = "SELECT ? FROM ? WHERE name LIKE '?'";
         String content = "";
 
         if ( tableExist(table) ) {
             SQLiteDatabase db = getReadableDatabase();
             Log.w(TAG, "Query '" + query + "' is going to be launched");
-            Cursor cursor = db.rawQuery(query, null);
+            //Cursor cursor = db.rawQuery(query, new String[] {field, table, name});
+            Cursor cursor = db.query(table, new String[] {field}, "name Like ?", new String[] {name}, null, null, null);
             Log.d(TAG, cursor.getCount() + " '" + table + "' with name '" + name + "' located in the database");
             if (cursor.moveToNext()) {
                 content = cursor.getString(0);
@@ -207,11 +216,13 @@ class OurDBStore extends SQLiteOpenHelper {
         Log.d(TAG, "getAllInTable()");
         Integer id;
         String name;
-        String query = "SELECT id, name FROM "+table+ " ORDER BY name COLLATE NOCASE";
+        //String query = "SELECT id, name FROM "+table+ " ORDER BY name COLLATE NOCASE";
+        String query = "SELECT id, name FROM '?' ORDER BY name COLLATE NOCASE";
         Vector<String> vector = new Vector<String>();
 
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
+        SQLiteDatabase sqlite = getReadableDatabase();
+        //Cursor cursor = sqlite.rawQuery(query, new String[] {table});
+        Cursor cursor = sqlite.query(table, new String[] {"id", "name"}, null, null, null, null, "name COLLATE NOCASE");
         Log.d(TAG, cursor.getCount()+" "+table+" located in the database");
         while ( cursor.moveToNext() ) {
             id = cursor.getInt(0);
@@ -220,7 +231,7 @@ class OurDBStore extends SQLiteOpenHelper {
             vector.add(name);
         }
         cursor.close();
-        db.close();
+        sqlite.close();
         Log.d(TAG, "Query "+query+" done");
         return vector;
     }

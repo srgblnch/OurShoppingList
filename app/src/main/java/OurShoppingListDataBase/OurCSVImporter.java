@@ -105,6 +105,7 @@ class OurCSVImporter {
 
     private int getVersionField(BufferedReader in, String field) throws Exception {
         String line = in.readLine();
+        line = line.replace("\t", " ").trim();
         if ( line.isEmpty() ) {
             throw new Exception("Could not get the line");
         }else if ( ! line.startsWith("# ")) {

@@ -62,4 +62,10 @@ This is my first Android App and a reencouter with Java after almost two decades
 ## Internal pending improvements
 
 - [ ] unify the Adaptor classes
-- [ ] Split the OurShoppingListDB class
+- [x] Split the OurShoppingListDB class
+  - [ ] review and bugfix the rawQuery usage.
+- [ ] Prevent names (any OurShoppingListObj) with ctrl characters (like \t or \n), but allow language specific simbols (like accents, dieresis)
+- [ ] avoid extension hardcoding in the import/export
+- [ ] separate the line generation in csv export, to be reused in the transaction content.
+- [ ] Sort in the csv export by name and not by id.
+- [ ] InShopping activity, show only the products to be bought.

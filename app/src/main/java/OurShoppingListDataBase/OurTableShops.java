@@ -40,9 +40,10 @@ class OurTableShops extends OurTable {
         Shop shop = (Shop) obj;
         Log.d(TAG, "insert("+shop.getName()+")");
         if ( db.getIdFromName("Shops", shop.getName()) == -1 ) { //Doesn't exist
-            String insert = "INSERT INTO Shops VALUES ( null, '"+shop.getName()+"')";
+            /*String insert = "INSERT INTO Shops VALUES ( null, '"+shop.getName()+"')";*/
+            String insert = "INSERT INTO Shops VALUES ( null, '?')";
             SQLiteDatabase sqlite = db.getWritableDatabase();
-            sqlite.execSQL(insert);
+            sqlite.rawQuery(insert, new String[] {shop.getName()});
             Log.d(TAG, "Insert: "+insert);
             return db.getIdFromName("Shops", shop.getName());
         } else {
@@ -59,12 +60,13 @@ class OurTableShops extends OurTable {
         if ( getShopObj(id) == null ) {
             return false;
         }
-        String modification = "UPDATE Shops SET "+
+        /*String modification = "UPDATE Shops SET "+
                 "name = '"+shop.getName()+"' "+
-                "WHERE id = "+id;
+                "WHERE id = "+id;*/
+        String modification = "UPDATE Shops SET name = '?' WHERE id = ?";
         Log.d(TAG, modification);
         SQLiteDatabase sqlite = db.getWritableDatabase();
-        sqlite.execSQL(modification);
+        sqlite.rawQuery(modification, new String[] {shop.getName(), ""+id});
         return true;
     }
 
@@ -79,10 +81,11 @@ class OurTableShops extends OurTable {
         for (String name : productsInShop) {
             db.getProductsTable().getProductObj(name).unassignShop(shop);
         }
-        String deletion = "DELETE FROM Shops WHERE id = " + id;
+        /*String deletion = "DELETE FROM Shops WHERE id = " + id;*/
+        String deletion = "DELETE FROM Shops WHERE id = ?";
         Log.d(TAG, deletion);
         SQLiteDatabase sqlite = db.getWritableDatabase();
-        sqlite.execSQL(deletion);
+        sqlite.rawQuery(deletion, new String[] {""+id});
         return true;
     }
 
