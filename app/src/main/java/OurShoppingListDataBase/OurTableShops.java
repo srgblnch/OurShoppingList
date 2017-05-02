@@ -41,9 +41,10 @@ class OurTableShops extends OurTable {
         Log.d(TAG, "insert("+shop.getName()+")");
         if ( db.getIdFromName("Shops", shop.getName()) == -1 ) { //Doesn't exist
             /*String insert = "INSERT INTO Shops VALUES ( null, '"+shop.getName()+"')";*/
-            String insert = "INSERT INTO Shops VALUES ( null, '?')";
+            String insert = "INSERT INTO Shops VALUES ( null, ?)";
             SQLiteDatabase sqlite = db.getWritableDatabase();
             sqlite.rawQuery(insert, new String[] {shop.getName()});
+            sqlite.close();
             Log.d(TAG, "Insert: "+insert);
             return db.getIdFromName("Shops", shop.getName());
         } else {
@@ -63,10 +64,11 @@ class OurTableShops extends OurTable {
         /*String modification = "UPDATE Shops SET "+
                 "name = '"+shop.getName()+"' "+
                 "WHERE id = "+id;*/
-        String modification = "UPDATE Shops SET name = '?' WHERE id = ?";
+        String modification = "UPDATE Shops SET name = ? WHERE id = ?";
         Log.d(TAG, modification);
         SQLiteDatabase sqlite = db.getWritableDatabase();
         sqlite.rawQuery(modification, new String[] {shop.getName(), ""+id});
+        sqlite.close();
         return true;
     }
 
@@ -86,6 +88,7 @@ class OurTableShops extends OurTable {
         Log.d(TAG, deletion);
         SQLiteDatabase sqlite = db.getWritableDatabase();
         sqlite.rawQuery(deletion, new String[] {""+id});
+        sqlite.close();
         return true;
     }
 

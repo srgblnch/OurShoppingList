@@ -40,10 +40,10 @@ class OurTableCategories extends OurTable {
         Category  category = (Category) obj;
         Log.d(TAG, "insertCategoryObj("+category.getName()+")");
         if ( db.getIdFromName("Categories", category.getName()) == -1 ) { //Doesn't exist
-            //String insert = "INSERT INTO Categories VALUES ( null, '"+category.getName()+"')";
-            String insert = "INSERT INTO Categories VALUES ( null, '?')";
+            String insert = "INSERT INTO Categories VALUES ( null, ?)";
             SQLiteDatabase sqlite = db.getWritableDatabase();
             sqlite.rawQuery(insert, new String[] {category.getName()});
+            sqlite.close();
             Log.d(TAG, "Insert: "+insert);
             return db.getIdFromName("Categories", obj.getName());
         } else {
@@ -60,13 +60,11 @@ class OurTableCategories extends OurTable {
         if ( getCategoryObj(id) == null ) {
             return false;
         }
-        /*String modification = "UPDATE Categories SET "+
-                "name = '"+category.getName()+"' "+
-                "WHERE id = "+id;*/
-        String modification = "UPDATE Categories SET name = '?' WHERE id = ?";
+        String modification = "UPDATE Categories SET name = ? WHERE id = ?";
         Log.d(TAG, modification);
         SQLiteDatabase sqlite = db.getWritableDatabase();
         sqlite.rawQuery(modification, new String[] {category.getName(), ""+id});
+        sqlite.close();
         return true;
     }
 
@@ -76,10 +74,10 @@ class OurTableCategories extends OurTable {
         if ( getCategoryObj(id) == null ) {
             return false;
         }
-        //String deletion = "DELETE FROM Categories WHERE id = " + id;
         String deletion = "DELETE FROM Categories WHERE id = ?";
         SQLiteDatabase sqlite = db.getWritableDatabase();
         sqlite.rawQuery(deletion, new String[] {""+id});
+        sqlite.close();
         return true;
     }
 

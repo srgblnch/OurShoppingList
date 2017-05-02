@@ -205,7 +205,6 @@ class OurCSVImporter {
             }
         }
         Products products = Products.getInstance();
-        products.modify(product);
-        return true;
+        return products.modify(product);
     }
 }

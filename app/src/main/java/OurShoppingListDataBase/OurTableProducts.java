@@ -49,11 +49,10 @@ class OurTableProducts extends OurTable {
         if ( db.getIdFromName("Products", obj.getName()) == -1) {  // if doesn't exist
             int buy;
             if ( product.getBuy() ) { buy = 1; } else { buy = 0; }
-            /*String insert = "INSERT INTO Products VALUES ( null, '"+product.getName()+"', "+buy+", "
-                    +product.getCategoryId()+", "+product.getHowMany()+")";*/
-            String insert = "INSERT INTO Products VALUES ( null, '?', ?, ?, ?)";
+            String insert = "INSERT INTO Products VALUES ( null, ?, ?, ?, ?)";
             SQLiteDatabase sqlite = this.db.getWritableDatabase();
             sqlite.rawQuery(insert, new String[] {product.getName(), ""+buy, product.getCategoryId().toString(), product.getHowMany().toString()});
+            sqlite.close();
             Log.d(TAG, "Insert: "+insert);
             return db.getIdFromName("Products", obj.getName());
         } else {
@@ -72,17 +71,11 @@ class OurTableProducts extends OurTable {
         }
         int buy;
         if ( product.getBuy() ) { buy = 1; } else { buy = 0; }
-        /*String modification = "UPDATE Products SET "+
-                "name = '"+product.getName()+"', "+
-                "buy = "+buy+", "+
-                "category = "+product.getCategoryId()+", "+
-                "howmany = "+product.getHowMany()+" "+
-                "WHERE id = "+id;*/
-        String modification = "UPDATE Products SET name = '?', buy = ?, category = ?, howmany = ? WHERE id = ?";
+        String modification = "UPDATE Products SET name = ?, buy = ?, category = ?, howmany = ? WHERE id = ?";
         Log.d(TAG, modification);
         SQLiteDatabase sqlite = db.getWritableDatabase();
         sqlite.rawQuery(modification, new String[] {product.getName(), ""+buy, product.getCategoryId().toString(), product.getHowMany().toString(), ""+id});
-        //sqlite.update("Products", new ContentValues())
+        sqlite.close();
         return true;
     }
 
@@ -92,11 +85,11 @@ class OurTableProducts extends OurTable {
         if ( getProductObj(id) == null ) {
             return false;
         }
-        //String deletion = "DELETE FROM Products WHERE id = " + id;
         String deletion = "DELETE FROM Products WHERE id = ?";
         Log.d(TAG, deletion);
         SQLiteDatabase sqlite = db.getWritableDatabase();
         sqlite.rawQuery(deletion, new String[] {""+id});
+        sqlite.close();
         return true;
     }
 

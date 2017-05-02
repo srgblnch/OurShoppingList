@@ -45,12 +45,11 @@ class OurTableRelationProductShop extends OurTableRelation {
         Log.d(TAG, "insert("+product.getName()+", "+shop.getName()+")");
 
         if ( !isProductInShop(product, shop)) {
-            //String insert = "INSERT INTO Products_has_Shops VALUES ( "+product.getId()+", "+shop.getId()+", "+position+" )";
             String insert = "INSERT INTO Products_has_Shops VALUES ( ?, ?, ? )";
             SQLiteDatabase sqlite = db.getWritableDatabase();
             sqlite.rawQuery(insert, new String[] {product.getId().toString(), shop.getId().toString(), position.toString()});
+            sqlite.close();
             Log.d(TAG, "Insert: "+insert);
-            db.close();
             return 1;
         } else {
             Log.w(TAG, "Insert failed, pair ("+product.getId()+","+shop.getId()+") already exist");
@@ -70,7 +69,7 @@ class OurTableRelationProductShop extends OurTableRelation {
                 /*String modification = "UPDATE Products_has_Shops SET "+
                         "position = "+position+" "+
                         "WHERE Product == "+product.getId()+" AND Shop == "+shop.getId();*/
-                String modification = "UPDATE Products_has_Shops SET position = ? WHERE Product == ? AND Shop == ?";
+                String modification = "UPDATE Products_has_Shops SET position = ? WHERE Product = ? AND Shop = ?";
                 Log.d(TAG, modification);
                 SQLiteDatabase sqlite = db.getWritableDatabase();
                 sqlite.rawQuery(modification, new String[] {position.toString(), product.getId().toString(), shop.getId().toString()});
@@ -91,7 +90,7 @@ class OurTableRelationProductShop extends OurTableRelation {
         Shop shop = (Shop)obj2;
         Log.d(TAG, "removeProductInShop("+product.getName()+", "+shop.getName()+")");
         //String query = "SELECT Product, Shop FROM Products_has_Shops WHERE Product == "+product.getId()+" AND Shop == "+shop.getId();
-        String query = "SELECT Product, Shop FROM Products_has_Shops WHERE Product == ? AND Shop == ?";
+        String query = "SELECT Product, Shop FROM Products_has_Shops WHERE Product = ? AND Shop = ?";
         Integer counter;
 
         SQLiteDatabase sqlite = db.getReadableDatabase();
@@ -104,8 +103,7 @@ class OurTableRelationProductShop extends OurTableRelation {
         sqlite.close();
 
         if ( counter == 1) {
-            /*String deletion = "DELETE FROM Products_has_Shops WHERE Product == "+product.getId()+" AND Shop == "+shop.getId();*/
-            String deletion = "DELETE FROM Products_has_Shops WHERE Product == ? AND Shop == ?";
+            String deletion = "DELETE FROM Products_has_Shops WHERE Product = ? AND Shop = ?";
             sqlite = db.getWritableDatabase();
             sqlite.rawQuery(deletion, new String[] {product.getId().toString(), shop.getId().toString()});
             Log.d(TAG, "Delete: "+deletion);
@@ -135,7 +133,7 @@ class OurTableRelationProductShop extends OurTableRelation {
             productNames.add( db.getProductsTable().getProductName(productId));
         }
         cursor.close();
-        db.close();
+        sqlite.close();
         return productNames;
     }
 
@@ -145,8 +143,7 @@ class OurTableRelationProductShop extends OurTableRelation {
 
     protected boolean isProductInShop(String productName, int productId, String shopName, int shopId) {
         Log.d(TAG, "isProductInShop("+productName+","+shopName+")");
-        //String query = "SELECT Product, Shop FROM Products_has_Shops WHERE Product == "+productId+" AND Shop == "+shopId;
-        String query = "SELECT Product, Shop FROM Products_has_Shops WHERE Product == ? AND Shop == ?";
+        String query = "SELECT Product, Shop FROM Products_has_Shops WHERE Product = ? AND Shop = ?";
         Integer counter;
 
         SQLiteDatabase sqlite = db.getReadableDatabase();
