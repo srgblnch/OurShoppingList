@@ -1,47 +1,69 @@
 # OurShoppingList (for Android)
 
-This is my first Android App and a reencouter with Java after almost two decades. This _toy-project_ starts from the idea that "If there isn't apps that does the things the way I like, I'll propose one", and share it as free software. For any user be sure the app doesn't do anything unwanted (like a dark usage of the information, specially about the statistics) the free software license is perfect; the sources can be read by anyone to be sure it does what it says. If there is some feature or behaviour that some one like to have it different, the license allow to do it always sharing back the contribution.
+This is my first Android App and a reencouter with Java after almost two decades. This _toy-project_ starts from the idea that "_If there isn't apps that does the things the way I like, I'll propose one_", and share it as free software. For any user be sure the app doesn't do anything unwanted (like a dark usage of the information, including any statistics) the free software license is perfect; the sources can be read by anyone to be sure it does what it says. If there is some feature or behaviour that some one like to have it different, the license allow to do it always sharing back the contribution.
 
 ![license GPLv3+](https://img.shields.io/badge/license-GPLv3+-green.svg)
 ![2 - Pre-Alpha](https://img.shields.io/badge/Development_Status-2_--_pre--alpha-orange.svg)
 
-## Features
+## Base features
 
-- [x] Main screen with alphabetical check list of products
-  - [x] New product Action button
-    - [ ] List product names starting like what the user is typing (auto-complete)
-  - [ ] Group products into categories (expandable widget)
-  - [x] Short click: flip "buy" tick
-  - [x] Long click: edit the product (like the new product view)
-    - [x] Allow to set the product category
-      - [ ] Allow a direct creation of a new category
-    - [x] Allow to set the shops where it can be bought
-      - [ ] Allow a direct creation of a new shop
-    - [x] Select how many should be bought
-    - [x] Allow to store a modified product as well as delete it
-      - TODO: decide if autosave or cancel when control-back button
-    - [ ] Feature to have products to be bought only once ([logical] removed once bought)
-    - [ ] Product picture
-  - [ ] Barcode scan
-  - [ ] Priority of a product to be bought (to provide info to ring the bell if one should go to a certain shop soon).
-- [x] Categories screen alphabetically listed
-  - [ ] Show products on each category (maybe short click)
-  - [ ] Allow quick selection of products to be set to the given category (while in show products in the category).
-  - [ ] When a category is deleted, reassign its products as "Unclassified"
-- [x] Shops screen alphabetically listed
-  - [ ] Allow quick selection of products to be assigned to the given shop
-    - [ ] Copy products from another shop
-    - [ ] Assign all the products with a given category
-  - [ ] Allow to modify positions of the products for the given shop (drag&drop)
-  - [ ] Unassign products when a shop is deleted
-    - [ ] List products that hasn't a shop assign
-  - [ ] Info of "products to be bought"/"products assign to the shop"
-    - [ ] Ponderation based on the products priorities.
-- [x] "In the shop" Action button
+- [x] Main screen with alphabetical check list of products, when one likes to review what has to be bought.
+- [x] "in the shop" activity to use when one is buying.
   - [x] Select the shop where one is going to buy
-  - [ ] Feature to auto-position based on the ongoing products loaded to the cart
-  - [ ] Slice product to instead of mark as "in the cart" tag that "today is not in the shop".
-  - [ ] Maintain the application above the screen lock while buying.
+- [ ] Sinchronization between a set of devices
+
+### Main Activity
+
+- [x] New products action button
+- [x] Short click: flip "buy" tick.
+- [x] Long click: edit the product (like the new product view)
+- [x] special actions menu
+  - [x] Activity to manage _categories_
+  - [x] Activity to manage _shops_
+- [ ] Group products in _Categories_
+
+### New/Modify Product Activity
+
+- [ ] Auto-complete: While introducing a new name, check in the current known products if any contains this substring
+- [x] Set product category
+  - [ ] Direct creation of a new _category_
+- [x] set the shops where the product can be bought
+  - [ ] Direct creatiob of a new _shop_
+- [x] Select how many should be bought
+- [x] store a modified product (and also option to delete)
+  - TODO: decide if autosave or candel when control-back button
+- [ ] Special product types "to be bought inly once" ([logical] remove once bought)
+- [ ] Products pictures
+- [ ] Barcode scan
+- [ ] Priority of a product to be bought (to provide info to ring the bell if one should go to a certain shop soon).
+
+### New/Modify Category Activity
+
+- [x] Alphabetical list of categories
+- [ ] Show the products on a given category
+- [ ] Quick selection of products to be included to a category
+- [ ] When category is deleted, reassign its products as "Unclassified"
+
+### New/Modify Shop Activity
+
+- [x] Alphabetical list of shops
+- [ ] Quick selection of products to be assigned to a shop
+  - [ ] Copy products from another shop
+  - [ ] Assign products from a given category
+- [ ] Modify product positions within a shop (drag&drop)
+- [ ] Unassign products when a shop is deleted
+  - TODO: solve what to do with products that doesn't have any shop
+- [ ] Information about "products to be bought"/"products assign to the shop"
+  - [ ] Ponderation based on the product priorities
+
+### "In the shop" activity
+
+- [ ] auto-position based on the ongoing products loaded to the cart
+- [ ] Slice product to tag as "today is not in the shop" (instead of "in the card")
+- [ ] Maintain the application above the screen lock while buying.
+
+## Internal features
+
 - [x] SQLite internal database
   - [ ] Import/Export
     - [x] csv files
@@ -69,3 +91,4 @@ This is my first Android App and a reencouter with Java after almost two decades
 - [ ] separate the line generation in csv export, to be reused in the transaction content.
 - [ ] Sort in the csv export by name and not by id.
 - [ ] InShopping activity, show only the products to be bought.
+
