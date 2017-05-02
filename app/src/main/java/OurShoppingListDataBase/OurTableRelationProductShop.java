@@ -1,5 +1,6 @@
 package OurShoppingListDataBase;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -42,14 +43,19 @@ class OurTableRelationProductShop extends OurTableRelation {
     protected Integer insert(OurShoppingListObj obj1, OurShoppingListObj obj2, Integer position) {
         Product product = (Product)obj1;
         Shop shop = (Shop)obj2;
+        ContentValues values = new ContentValues();
         Log.d(TAG, "insert("+product.getName()+", "+shop.getName()+")");
 
         if ( !isProductInShop(product, shop)) {
-            String insert = "INSERT INTO Products_has_Shops VALUES ( ?, ?, ? )";
+            //String insert = "INSERT INTO Products_has_Shops VALUES ( ?, ?, ? )";
             SQLiteDatabase sqlite = db.getWritableDatabase();
-            sqlite.rawQuery(insert, new String[] {product.getId().toString(), shop.getId().toString(), position.toString()});
+            //sqlite.rawQuery(insert, new String[] {product.getId().toString(), shop.getId().toString(), position.toString()});
+            values.put("Product", product.getId());
+            values.put("Shop", shop.getId());
+            values.put("position", position);
+            sqlite.insert("Products_has_Shops", null, values);
             sqlite.close();
-            Log.d(TAG, "Insert: "+insert);
+            //Log.d(TAG, "Insert: "+insert);
             return 1;
         } else {
             Log.w(TAG, "Insert failed, pair ("+product.getId()+","+shop.getId()+") already exist");

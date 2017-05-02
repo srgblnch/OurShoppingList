@@ -123,6 +123,7 @@ class OurCSVImporter {
         // fixme: horrible but first approach
         String[] components = line.split("\t");
         // about product
+        boolean productExist;
         Product product = null;
         String name;
         boolean buy;
@@ -140,7 +141,11 @@ class OurCSVImporter {
 
         if ( fields.contains("product") ){
             name = components[fields.indexOf("product")];
+            productExist = ourDB.getProductsTable().isProductInDB(name);
             product = new Product(name);
+            if ( ! productExist ) {
+                Products.getInstance().add(product);
+            }
             Log.d(TAG, "processing product "+name);
         }
         if ( fields.contains("buy") ) {

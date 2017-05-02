@@ -45,15 +45,21 @@ class OurTableProducts extends OurTable {
     @Override
     protected Integer insert(OurShoppingListObj obj) {
         Product product = (Product)obj;
+        ContentValues values = new ContentValues();
         Log.d(TAG, "insert("+product.getName()+")");
         if ( db.getIdFromName("Products", obj.getName()) == -1) {  // if doesn't exist
             int buy;
             if ( product.getBuy() ) { buy = 1; } else { buy = 0; }
-            String insert = "INSERT INTO Products VALUES ( null, ?, ?, ?, ?)";
+            //String insert = "INSERT INTO Products VALUES ( ?, ?, ?, ?)";
             SQLiteDatabase sqlite = this.db.getWritableDatabase();
-            sqlite.rawQuery(insert, new String[] {product.getName(), ""+buy, product.getCategoryId().toString(), product.getHowMany().toString()});
+            //sqlite.rawQuery(insert, new String[] {product.getName(), ""+buy, product.getCategoryId().toString(), product.getHowMany().toString()});
+            values.put("name", product.getName());
+            values.put("buy", product.getBuy());
+            values.put("category", product.getCategoryId());
+            values.put("howmany", product.getHowMany());
+            sqlite.insert("Products", null, values);
             sqlite.close();
-            Log.d(TAG, "Insert: "+insert);
+            //Log.d(TAG, "Insert: "+insert);
             return db.getIdFromName("Products", obj.getName());
         } else {
             Log.w(TAG, "Insert failed, "+obj.getName()+"already exist");

@@ -1,5 +1,6 @@
 package OurShoppingListDataBase;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -38,13 +39,15 @@ class OurTableCategories extends OurTable {
     @Override
     protected Integer insert(OurShoppingListObj obj) {
         Category  category = (Category) obj;
+        ContentValues values = new ContentValues();
         Log.d(TAG, "insertCategoryObj("+category.getName()+")");
         if ( db.getIdFromName("Categories", category.getName()) == -1 ) { //Doesn't exist
-            String insert = "INSERT INTO Categories VALUES ( null, ?)";
+            //String insert = "INSERT INTO Categories VALUES ( null, ?)";
             SQLiteDatabase sqlite = db.getWritableDatabase();
-            sqlite.rawQuery(insert, new String[] {category.getName()});
+            values.put("name", category.getName());
+            sqlite.insert("Categories", null, values);
             sqlite.close();
-            Log.d(TAG, "Insert: "+insert);
+            //Log.d(TAG, "Insert: "+insert);
             return db.getIdFromName("Categories", obj.getName());
         } else {
             Log.w(TAG, "Insert failed, "+obj.getName()+"already exist");
