@@ -65,6 +65,12 @@ This is my first Android App and a reencouter with Java after almost two decades
   - [ ] Perhaps also to fastly remove from this _shop_.
 - [ ] Maintain the application above the screen lock while buying.
 
+### Import/Export activity
+
+- [ ] Directory and file chooser.
+- [ ] Option to remove all (or selective) elements of the _Products_, _Categories_ and _Shops_.
+- [ ] Progress bar while doing the import/export operation.
+
 ## Internal features
 
 - [x] SQLite internal database.
@@ -80,6 +86,7 @@ This is my first Android App and a reencouter with Java after almost two decades
     - [ ] Allow users to share the list of _products_ between them.
   - [ ] Peer2peer (perhaps over MQTT).
     - [ ] Trusted discovery of partners.
+  - [ ] Users shall have control about when the application will synchronise between other application instances.
 - [ ] History of _products_ (statistics with special enfasis on privacy, this must be information only for the owners of the list).
   - [ ] When they where bought (frequency, priority).
     - [ ] Price log (evolution plot).

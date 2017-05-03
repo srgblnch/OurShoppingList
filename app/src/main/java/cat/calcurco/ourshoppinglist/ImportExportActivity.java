@@ -24,6 +24,7 @@
 package cat.calcurco.ourshoppinglist;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -32,8 +33,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -98,6 +101,7 @@ public class ImportExportActivity extends AppCompatActivity {
             if ( ! fileName.endsWith(".csv")) {
                 fileName += ".csv";
             }
+            hideSoftKeyboard();
             if ( importObj.importDB2CSV(new File(directory, fileName)) ) {
                 Log.i(TAG, "In doImport(): Succeed");
                 Snackbar.make(findViewById(R.id.exporter), "Import succeed",
@@ -128,6 +132,7 @@ public class ImportExportActivity extends AppCompatActivity {
             ImportExport exportObj = new ImportExport();
             File directory = new File(directoryText.getText().toString());
             String fileName = filenameText.getText().toString();
+            hideSoftKeyboard();
             // proceed with export
             if ( exportObj.exportDB2CSV(directory, fileName) ) {
                 Log.i(TAG, "In doExport(): Succeed");
@@ -192,4 +197,24 @@ public class ImportExportActivity extends AppCompatActivity {
 //                "onRequestPermissionsResult("+requestCode+", "+permissions+", "+grantResults+")",
 //                Snackbar.LENGTH_LONG).show();
 //    }
+    private boolean hideSoftKeyboard() {
+        View view = this.getCurrentFocus();
+        if ( view != null ) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if ( imm.isActive() ) {
+                return imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void prepareCallback() {
+
+    }
+
+    public void updateProgressBar(Integer value) {
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setProgress(value);
+    }
 }
