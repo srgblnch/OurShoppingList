@@ -39,15 +39,15 @@ class OurTableCategories extends OurTable {
     @Override
     protected Integer insert(OurShoppingListObj obj) {
         Category  category = (Category) obj;
+
         ContentValues values = new ContentValues();
-        Log.d(TAG, "insertCategoryObj("+category.getName()+")");
+
+        Log.d(TAG, "insert("+category.getName()+")");
         if ( db.getIdFromName("Categories", category.getName()) == -1 ) { //Doesn't exist
-            //String insert = "INSERT INTO Categories VALUES ( null, ?)";
             SQLiteDatabase sqlite = db.getWritableDatabase();
             values.put("name", category.getName());
             sqlite.insert("Categories", null, values);
             sqlite.close();
-            //Log.d(TAG, "Insert: "+insert);
             return db.getIdFromName("Categories", obj.getName());
         } else {
             Log.w(TAG, "Insert failed, "+obj.getName()+"already exist");
@@ -59,27 +59,42 @@ class OurTableCategories extends OurTable {
     protected boolean modify(OurShoppingListObj obj) {
         Category  category = (Category) obj;
         Integer id = category.getId();
+
+        String table = "Categories";
+        ContentValues values = new ContentValues();
+        String where = "id = ?";
+        String[] whereArgs = new String[] {id.toString()};
+
+        values.put("name", category.getName());
+
         Log.d(TAG, "modify("+id+")");
         if ( getCategoryObj(id) == null ) {
             return false;
         }
-        String modification = "UPDATE Categories SET name = ? WHERE id = ?";
-        Log.d(TAG, modification);
         SQLiteDatabase sqlite = db.getWritableDatabase();
-        sqlite.rawQuery(modification, new String[] {category.getName(), ""+id});
+        sqlite.update(table, values, where, whereArgs);
         sqlite.close();
         return true;
     }
 
     @Override
     protected boolean remove(Integer id) {
+        String table = "Categories";
+        String where = "id = ?";
+        String[] whereArgs = new String[] {id.toString()};
+
         Log.d(TAG, "remove("+id+")");
-        if ( getCategoryObj(id) == null ) {
+        Category category = getCategoryObj(id);
+        if ( category == null ) {
             return false;
         }
-        String deletion = "DELETE FROM Categories WHERE id = ?";
+        // fixme: what to do with products that has this category
+        Vector<String> productsInCategory = db.getProductsTable().getProductsInCategory(id);
+        for (String name : productsInCategory) {
+            db.getProductsTable().getProductObj(name).setCategoryId(-1);
+        }
         SQLiteDatabase sqlite = db.getWritableDatabase();
-        sqlite.rawQuery(deletion, new String[] {""+id});
+        sqlite.delete(table, where, whereArgs);
         sqlite.close();
         return true;
     }

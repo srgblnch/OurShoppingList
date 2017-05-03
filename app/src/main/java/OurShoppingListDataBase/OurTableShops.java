@@ -39,17 +39,15 @@ class OurTableShops extends OurTable {
     @Override
     protected Integer insert(OurShoppingListObj obj) {
         Shop shop = (Shop) obj;
+
         ContentValues values = new ContentValues();
+
         Log.d(TAG, "insert("+shop.getName()+")");
         if ( db.getIdFromName("Shops", shop.getName()) == -1 ) { //Doesn't exist
-            /*String insert = "INSERT INTO Shops VALUES ( null, '"+shop.getName()+"')";*/
-            //String insert = "INSERT INTO Shops VALUES ( null, ?)";
             SQLiteDatabase sqlite = db.getWritableDatabase();
-            //sqlite.rawQuery(insert, new String[] {shop.getName()});
             values.put("name", shop.getName());
             sqlite.insert("Shops", null, values);
             sqlite.close();
-            //Log.d(TAG, "Insert: "+insert);
             return db.getIdFromName("Shops", shop.getName());
         } else {
             Log.w(TAG, "Insert failed, "+shop.getName()+"already exist");
@@ -61,23 +59,30 @@ class OurTableShops extends OurTable {
     protected boolean modify(OurShoppingListObj obj) {
         Shop shop = (Shop) obj;
         Integer id = shop.getId();
+
+        String table = "Shops";
+        ContentValues values = new ContentValues();
+        String where = "id = ?";
+        String[] whereArgs = new String[] {id.toString()};
+
+        values.put("name", shop.getName());
+
         Log.d(TAG, "modify("+id+")");
         if ( getShopObj(id) == null ) {
             return false;
         }
-        /*String modification = "UPDATE Shops SET "+
-                "name = '"+shop.getName()+"' "+
-                "WHERE id = "+id;*/
-        String modification = "UPDATE Shops SET name = ? WHERE id = ?";
-        Log.d(TAG, modification);
         SQLiteDatabase sqlite = db.getWritableDatabase();
-        sqlite.rawQuery(modification, new String[] {shop.getName(), ""+id});
+        sqlite.update(table, values, where, whereArgs);
         sqlite.close();
         return true;
     }
 
     @Override
     protected boolean remove(Integer id) {
+        String table = "Shops";
+        String where = "id = ?";
+        String[] whereArgs = new String[] {id.toString()};
+
         Log.d(TAG, "remove("+id+")");
         Shop shop = getShopObj(id);
         if (shop == null) {
@@ -87,11 +92,8 @@ class OurTableShops extends OurTable {
         for (String name : productsInShop) {
             db.getProductsTable().getProductObj(name).unassignShop(shop);
         }
-        /*String deletion = "DELETE FROM Shops WHERE id = " + id;*/
-        String deletion = "DELETE FROM Shops WHERE id = ?";
-        Log.d(TAG, deletion);
         SQLiteDatabase sqlite = db.getWritableDatabase();
-        sqlite.rawQuery(deletion, new String[] {""+id});
+        sqlite.delete(table, where, whereArgs);
         sqlite.close();
         return true;
     }
