@@ -26,13 +26,17 @@ class OurTableProducts extends OurTable {
         Log.d(TAG, "construtor");
     }
 
+    public String getTableName() {
+        return "Products";
+    }
+
     /**** table generation ****/
 
     @Override
     protected void createTable(SQLiteDatabase sqlite) {
         Log.d(TAG, "createProductsTable()");
         String creator =
-                "CREATE TABLE `Products` (" +
+                "CREATE TABLE `"+getTableName()+"` (" +
                         "`id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
                         "`name` TEXT NOT NULL," +
                         "`buy` NUMERIC NOT NULL," +

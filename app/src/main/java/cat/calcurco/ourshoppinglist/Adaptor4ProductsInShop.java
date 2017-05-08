@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -68,15 +69,18 @@ public class Adaptor4ProductsInShop extends
 
         int prevPos = 0;
         for (String productName: productsInShop) {
-            product = new Product(productName);
-            Log.d(TAG, "Build "+product.getName());
-            if ( product.getPoitionInShop(shop) <= prevPos) {
-                product.setPoitionInShop(shop, prevPos+1);
-                prevPos += 1;
+            if ( productName != null ) {
+                product = new Product(productName);
+                if ( product.getBuy() ) {
+                    Log.d(TAG, "Build " + product.getName());
+                    if (product.getPoitionInShop(shop) <= prevPos) {
+                        product.setPoitionInShop(shop, prevPos + 1);
+                        prevPos += 1;
+                    }
+                    // TODO: only products to be bought
+                    products.add(product);
+                }
             }
-            // TODO: only products to be bought
-
-            products.add(product);
 
         }
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -87,12 +91,18 @@ public class Adaptor4ProductsInShop extends
         public TextView productName;
         public CheckBox toBeBought;
         //public ImageView foto;
+        public Button decrease;
+        public Button increase;
 
         public ViewHolder(View productView) {
             super(productView);
             productName = (TextView) productView.findViewById(R.id.header);
             toBeBought = (CheckBox) productView.findViewById(R.id.productCheckBox);
             //foto = (ImageView) productView.findViewById(R.id.foto);
+            decrease = (Button) productView.findViewById(R.id.decrease);
+            increase = (Button) productView.findViewById(R.id.increase);
+            decrease.setVisibility(View.GONE);
+            increase.setVisibility(View.GONE);
         }
     }
     // Build the ViewHolder with a view to a non initialized element
@@ -124,7 +134,7 @@ public class Adaptor4ProductsInShop extends
             name = howmany+" "+name;
         }
         if ( debugFlag ) {
-            name = name+" (id:" + product.getId() + ") position: " + product.getPoitionInShop(shop);
+            name = name+" (id:"+product.getId()+" position: "+product.getPoitionInShop(shop)+")";
         }
         holder.productName.setText(name);
         holder.toBeBought.setChecked(product.getBuy());

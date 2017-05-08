@@ -102,3 +102,7 @@ This is my first Android App and a reencouter with Java after almost two decades
 - [ ] separate the line generation in csv export, to be reused in the transaction content.
 - [ ] Sort in the csv export by name and not by id.
 
+### Known issues
+
+- [ ] The application is too slow when managing a list of ~150 products
+

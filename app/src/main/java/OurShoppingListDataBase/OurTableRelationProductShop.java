@@ -24,12 +24,16 @@ class OurTableRelationProductShop extends OurTableRelation {
         Log.d(TAG, "construtor");
     }
 
+    public String getTableName() {
+        return "Products_has_Shops";
+    }
+
     /**** table generation ****/
 
     protected void createTable(SQLiteDatabase sqlite) {
         Log.d(TAG, "createRelationProductsWithshops()");
         String creator =
-                "CREATE TABLE `Products_has_Shops` (" +
+                "CREATE TABLE `"+getTableName()+"` (" +
                         "`Product`INTEGER NOT NULL," +
                         "`Shop`INTEGER NOT NULL," +
                         "`position` INTEGER," +

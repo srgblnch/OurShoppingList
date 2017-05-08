@@ -47,14 +47,19 @@ class OurDBStore extends SQLiteOpenHelper {
     protected OurTableCategories categories = null;
     protected OurTableShops shops = null;
     protected  OurTableRelationProductShop product_has_shop = null;
+    Vector<String> tables = new Vector<>();
 
     public OurDBStore(Context context) {
         super(context, "OurShoppingList", null, 1);
         Log.d(TAG, "construtor");
         products = new OurTableProducts(this);
+        tables.add(products.getTableName());
         categories = new OurTableCategories(this);
+        tables.add(categories.getTableName());
         shops = new OurTableShops(this);
+        tables.add(shops.getTableName());
         product_has_shop = new OurTableRelationProductShop(this);
+        tables.add(product_has_shop.getTableName());
     }
 
     @Override
@@ -110,7 +115,9 @@ class OurDBStore extends SQLiteOpenHelper {
     }
 
     protected boolean tableExist(String tableName) {
-        boolean exist;
+        return tables.contains(tableName);
+
+        /*boolean exist;
 
         String from = "sqlite_master";
         String[] select = new String[] {"name"};
@@ -128,7 +135,7 @@ class OurDBStore extends SQLiteOpenHelper {
         }
         cursor.close();
         sqlite.close();
-        return exist;
+        return exist;*/
     }
 
     protected boolean isNameInTable(String table, String name) {

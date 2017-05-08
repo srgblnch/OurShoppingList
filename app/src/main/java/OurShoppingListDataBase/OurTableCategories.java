@@ -21,13 +21,17 @@ class OurTableCategories extends OurTable {
         Log.d(TAG, "construtor");
     }
 
+    public String getTableName() {
+        return "Categories";
+    }
+
     /**** table generation ****/
 
     @Override
     protected void createTable(SQLiteDatabase sqlite) {
         Log.d(TAG, "createCategoriesTable()");
         String creator =
-                "CREATE TABLE `Categories` (" +
+                "CREATE TABLE `"+getTableName()+"` (" +
                         "`id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
                         "`name` TEXT NOT NULL" +
                         ");";

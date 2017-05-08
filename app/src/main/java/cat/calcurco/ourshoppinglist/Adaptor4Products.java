@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -62,12 +63,16 @@ public class Adaptor4Products extends
         public TextView productName;
         public CheckBox toBeBought;
         //public ImageView foto;
+        public Button decrease;
+        public Button increase;
 
         public ViewHolder(View productView) {
             super(productView);
             productName = (TextView) productView.findViewById(R.id.header);
             toBeBought = (CheckBox) productView.findViewById(R.id.productCheckBox);
             //foto = (ImageView) productView.findViewById(R.id.foto);
+            decrease = (Button) productView.findViewById(R.id.decrease);
+            increase = (Button) productView.findViewById(R.id.increase);
         }
     }
     // Build the ViewHolder with a view to a non initialized element
@@ -89,7 +94,7 @@ public class Adaptor4Products extends
                 + " with "+  product.getName() + " (id:" + product.getId() + ")");
     }
 
-    public void populateView(ViewHolder holder, Product product) {
+    public void populateView(ViewHolder holder, final Product product) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
         boolean debugFlag = sharedPref.getBoolean(SettingsFragment.KEY_PREF_DEBUG_FLAG, false);
 
@@ -103,6 +108,26 @@ public class Adaptor4Products extends
         }
         holder.productName.setText(name);
         holder.toBeBought.setChecked(product.getBuy());
+        holder.decrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if ( product.getHowMany() > 1 ) {
+                    product.setHowMany(product.getHowMany()-1);
+                    product.setBuy(true);
+                } else {
+                    product.setBuy(false);
+                }
+                updateDate();
+            }
+        });
+        holder.increase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                product.setHowMany(product.getHowMany()+1);
+                product.setBuy(true);
+                updateDate();
+            }
+        });
     }
 
     public void updateDate(){

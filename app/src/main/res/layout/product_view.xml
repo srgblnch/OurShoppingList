@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="32dip">
+    android:layout_height="40dip">
 
     <CheckBox
-        android:text=""
+        android:id="@+id/productCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/productCheckBox"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:text="" />
 
     <TextView
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Product Name"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:singleLine="true"
         android:layout_alignBaseline="@+id/productCheckBox"
         android:layout_alignBottom="@+id/productCheckBox"
-        android:layout_toEndOf="@+id/productCheckBox" />
+        android:layout_toEndOf="@+id/productCheckBox"
+        android:singleLine="true"
+        android:text="Product Name"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/productCheckBox"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/productCheckBox"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/decrease"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:text="-" />
+
+        <Button
+            android:id="@+id/increase"
+            android:layout_width="34dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="+" />
+    </LinearLayout>
 </RelativeLayout>
