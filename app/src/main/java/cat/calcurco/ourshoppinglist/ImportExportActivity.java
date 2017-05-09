@@ -55,6 +55,7 @@ public class ImportExportActivity extends AppCompatActivity {
     private Button exporter;
     private EditText directoryText;
     private EditText filenameText;
+    private ProgressBar progressBar;
 
     private static final int REQUEST_READ_RIGHTS = 0;
     private static final int REQUEST_WRITE_RIGHTS = 1;
@@ -89,6 +90,9 @@ public class ImportExportActivity extends AppCompatActivity {
                 doExport();
             }
         });
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
     }
 
     private void doImport() {
