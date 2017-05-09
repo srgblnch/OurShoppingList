@@ -92,7 +92,7 @@ public class Shop extends OurShoppingListObj implements Comparable<Shop> {
         for ( String productName: db.getShopProducts(this)) {
             Product product = new Product(productName);
             if ( product.getBuy() ) {
-                ctr += 1;
+                ctr++;
             }
         }
         return ctr;
