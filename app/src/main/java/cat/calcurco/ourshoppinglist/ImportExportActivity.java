@@ -106,6 +106,7 @@ public class ImportExportActivity extends AppCompatActivity {
                 fileName += ".csv";
             }
             hideSoftKeyboard();
+            progressBar.setVisibility(View.VISIBLE);
             if ( importObj.importDB2CSV(new File(directory, fileName)) ) {
                 Log.i(TAG, "In doImport(): Succeed");
                 Snackbar.make(findViewById(R.id.exporter), "Import succeed",
@@ -122,6 +123,7 @@ public class ImportExportActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.exporter), "Failed to recover from file",
                         Snackbar.LENGTH_LONG).show();
             }
+            progressBar.setVisibility(View.GONE);
         } else {
             Snackbar.make(findViewById(R.id.exporter), "No read permission to proceed",
                     Snackbar.LENGTH_LONG).show();

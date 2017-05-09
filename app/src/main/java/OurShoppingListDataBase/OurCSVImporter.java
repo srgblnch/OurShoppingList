@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.Vector;
 
 import OurShoppingListObjs.Categories;
@@ -35,6 +36,7 @@ class OurCSVImporter {
         boolean returnCode = true;
         Vector<String> fields = new Vector<String>();
         BufferedReader in = null;
+        Integer nRows, currentRow = 0;
 
         in = openFile(file);
         if ( in == null ) {
@@ -44,11 +46,14 @@ class OurCSVImporter {
             try {
                 if ( returnCode ) {
                     String line;
+                    nRows = totalNumberOfLines(file)-3;  // db and csv version lines and header
+                    Log.d(TAG, "Expected to process "+nRows+" lines");
                     while ( (line = in.readLine() ) != null ) {
-                        Log.d(TAG, "Get the line: "+line);
+                        Log.d(TAG, "Get the line "+currentRow+" :"+line);
                         if ( ! processLine(line, fields) ) {
                             Log.w(TAG, "There has been an issue reading " + line);
                         }
+                        currentRow++;
                     }
                     Log.d(TAG, "In doImport(): Well done!!");
                 }
@@ -75,6 +80,20 @@ class OurCSVImporter {
             return null;
         }
         return in;
+    }
+
+    private Integer totalNumberOfLines(File file) {
+        LineNumberReader lnr = null;
+        Integer n = -1;
+        try {
+            lnr = new LineNumberReader(new FileReader(file));
+            while ( lnr.readLine() != null );  // iterate until the last line
+            n = lnr.getLineNumber()+1;
+            lnr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return n;
     }
 
     private boolean loadHeader(BufferedReader in, Vector<String> fields) {
