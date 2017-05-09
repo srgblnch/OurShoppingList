@@ -59,7 +59,6 @@ public class Products implements OurLists {
             size = db.getNumberOfProducts();
             if (size == 0) {
                 Log.d("Products", "No products found, populating with development list");
-                db._populateProducts();  // FIXME: This is only for development to have initial products
             } else {
                 Log.d("Products", size+" found. Not necessary to populate from scratch");
             }

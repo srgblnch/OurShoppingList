@@ -59,7 +59,6 @@ public class Categories implements OurLists {
             size = db.getNumberOfCategories();
             if (size == 0) {
                 Log.d("Categories", "No categories found, populating with development list");
-                db._populateCategories();  // FIXME: This is only for development to have initial products
             } else {
                 Log.d("Categories", size+" found. Not necessary to populate from scratch");
             }

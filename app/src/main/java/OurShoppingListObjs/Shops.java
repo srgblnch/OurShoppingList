@@ -59,7 +59,6 @@ public class Shops implements OurLists {
             size = db.getNumberOfShops();
             if (size == 0) {
                 Log.d("Shops", "No shops found, populating with development list");
-                db._populateShops();  // FIXME: This is only for development to have initial products
             } else {
                 Log.d("Shops", size+" found. Not necessary to populate from scratch");
             }
