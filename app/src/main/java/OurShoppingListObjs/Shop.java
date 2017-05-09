@@ -23,6 +23,7 @@
 
 package OurShoppingListObjs;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -83,4 +84,22 @@ public class Shop extends OurShoppingListObj implements Comparable<Shop> {
     }
 
     // TODO: assign, sort and remove products from a shop
+
+    public Integer countProductsToBeBougth() {
+        Integer ctr = 0;
+        OurData db = OurData.getInstance();
+        // todo: improve. This would be very slow.
+        for ( String productName: db.getShopProducts(this)) {
+            Product product = new Product(productName);
+            if ( product.getBuy() ) {
+                ctr += 1;
+            }
+        }
+        return ctr;
+    }
+
+    public Integer countProducts() {
+        OurData db = OurData.getInstance();
+        return db.getShopProducts(this).size();
+    }
 }

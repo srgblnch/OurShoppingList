@@ -92,6 +92,7 @@ public class Adaptor4Shops extends
         boolean debugFlag = sharedPref.getBoolean(SettingsFragment.KEY_PREF_DEBUG_FLAG, false);
 
         String name = shop.getName();
+        name += " ("+shop.countProductsToBeBougth()+"/"+shop.countProducts()+")";
         if ( debugFlag ) {
             name = name+" (id:" + shop.getId() + ")";
         }
