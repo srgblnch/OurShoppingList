@@ -156,13 +156,6 @@ public class OurData {
         return db.getProductsTable().getProductNames();
     }
 
-    public void _populateProducts() {
-        if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
-            return;
-        }
-    }
-
     /************************************** Categories area  **************************************/
 
     public Category getCategory(Integer id) {
@@ -259,13 +252,6 @@ public class OurData {
         return db.getCategoriesTable().getCategoryNames();
     }
 
-    public void _populateCategories() {
-        if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
-            return;
-        }
-    }
-
     /***************************************** Shops area *****************************************/
 
     public Shop getShop(Integer id) {
@@ -360,13 +346,6 @@ public class OurData {
             return null;
         }
         return db.getShopsTable().getShopNames();
-    }
-
-    public void _populateShops() {
-        if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
-            return;
-        }
     }
 
     /***************************** Products may have some shops assigned *****************************/
