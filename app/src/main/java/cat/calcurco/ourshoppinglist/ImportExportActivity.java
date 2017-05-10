@@ -28,12 +28,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity;  // replaced by FragmentActivity
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -43,17 +46,19 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import OurShoppingListDataBase.OurData;
-import OurShoppingListObjs.ImportExport;
+import OurShoppingListObjs.DataLoader;
 
 /**
  * Created by serguei on 07/09/16.
  */
 
-public class ImportExportActivity extends AppCompatActivity {
+public class ImportExportActivity extends FragmentActivity
+        implements LoaderManager.LoaderCallbacks<Boolean>{
     final static String TAG = "ImportExportActivity";
 
     private RadioButton formatcsv;
@@ -76,6 +81,7 @@ public class ImportExportActivity extends AppCompatActivity {
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+        DataLoader.activity = new WeakReference<ImportExportActivity>(this);
 
         directoryText = (EditText) findViewById(R.id.directoryText);
         directoryText.setText(getApplicationContext().getExternalMediaDirs()[0].getAbsolutePath());
@@ -130,34 +136,53 @@ public class ImportExportActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
+        AsyncTaskLoader<Boolean> loader = new DataLoader(this);
+        loader.forceLoad();
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Boolean> arg0, Boolean arg1) {
+        // todo: here would be the place for the Snackbar with the succeed/failed report
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Boolean> arg0) {
+
+    }
+
     private void doImport() {
         if ( requestRight(findViewById(R.id.importer), Manifest.permission.READ_EXTERNAL_STORAGE,
                 "Read access requested for the feature of import from a CSV file.",
                 REQUEST_READ_RIGHTS) ) {
-            ImportExport importObj = new ImportExport(getApplicationContext());
             File directory = new File(directoryText.getText().toString());
             String fileName = filenameText.getText().toString();
+
             if ( ! fileName.endsWith(".csv")) {
                 fileName += ".csv";
             }
             hideSoftKeyboard();
             progressBar.setVisibility(View.VISIBLE);
-            if ( importObj.importDB2CSV(new File(directory, fileName)) ) {
-                Log.i(TAG, "In doImport(): Succeed");
-                Snackbar.make(findViewById(R.id.exporter), "Import succeed",
-                        Snackbar.LENGTH_INDEFINITE).setAction("OK",
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                finish();
-                            }
-                        }).show();
-
-            } else {
-                Log.e(TAG, "In doImport(): Failed");
-                Snackbar.make(findViewById(R.id.exporter), "Failed to recover from file",
-                        Snackbar.LENGTH_LONG).show();
-            }
+            getSupportLoaderManager().initLoader(0, (Bundle) null, this);
+            // todo: how to report the Loader the Activity.{IMPORT,EXPORT}
+//            if ( importObj.importDB2CSV(new File(directory, fileName)) ) {
+//                Log.i(TAG, "In doImport(): Succeed");
+//                Snackbar.make(findViewById(R.id.exporter), "Import succeed",
+//                        Snackbar.LENGTH_INDEFINITE).setAction("OK",
+//                        new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                finish();
+//                            }
+//                        }).show();
+//
+//            } else {
+//                Log.e(TAG, "In doImport(): Failed");
+//                Snackbar.make(findViewById(R.id.exporter), "Failed to recover from file",
+//                        Snackbar.LENGTH_LONG).show();
+//            }
             progressBar.setVisibility(View.INVISIBLE);
         } else {
             Snackbar.make(findViewById(R.id.exporter), "No read permission to proceed",
@@ -170,27 +195,28 @@ public class ImportExportActivity extends AppCompatActivity {
         if ( requestRight(findViewById(R.id.exporter), Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 "Write access requested for the feature of export to a CSV file.",
                 REQUEST_WRITE_RIGHTS) ) {
-            ImportExport exportObj = new ImportExport(getApplicationContext());
             File directory = new File(directoryText.getText().toString());
             String fileName = filenameText.getText().toString();
             hideSoftKeyboard();
+            getSupportLoaderManager().initLoader(0, (Bundle) null, this);
+            // todo: how to report the Loader the Activity.{IMPORT,EXPORT}
             // proceed with export
-            if ( exportObj.exportDB2CSV(directory, fileName) ) {
-                Log.i(TAG, "In doExport(): Succeed");
-                Snackbar.make(findViewById(R.id.exporter), "Saved file",
-                        Snackbar.LENGTH_INDEFINITE).setAction("OK",
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                finish();
-                            }
-                        }).show();
-                finish();
-            } else {
-                Log.e(TAG, "In doExport(): Failed");
-                Snackbar.make(findViewById(R.id.exporter), "Failed to store the file",
-                        Snackbar.LENGTH_LONG).show();
-            }
+//            if ( exportObj.exportDB2CSV(directory, fileName) ) {
+//                Log.i(TAG, "In doExport(): Succeed");
+//                Snackbar.make(findViewById(R.id.exporter), "Saved file",
+//                        Snackbar.LENGTH_INDEFINITE).setAction("OK",
+//                        new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                finish();
+//                            }
+//                        }).show();
+//                finish();
+//            } else {
+//                Log.e(TAG, "In doExport(): Failed");
+//                Snackbar.make(findViewById(R.id.exporter), "Failed to store the file",
+//                        Snackbar.LENGTH_LONG).show();
+//            }
         } else {
             Snackbar.make(findViewById(R.id.exporter), "No write permission to proceed",
                     Snackbar.LENGTH_LONG).show();
@@ -226,17 +252,14 @@ public class ImportExportActivity extends AppCompatActivity {
     private boolean hideSoftKeyboard() {
         View view = this.getCurrentFocus();
         if ( view != null ) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm =
+                    (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             if ( imm.isActive() ) {
                 return imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
             return true;
         }
         return false;
-    }
-
-    private void prepareCallback() {
-
     }
 
     public void updateProgressBar(Integer value) {

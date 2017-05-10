@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_importexport) {
-            Log.d(TAG, "ImportExport");
+            Log.d(TAG, "DataLoader");
             launchImportExport(null);
             return true;
         }
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } else if ( requestCode == IMPORTEXPORT ) {
-            Log.d(TAG, "end ImportExport");
+            Log.d(TAG, "end DataLoader");
             updateProductsList(/*data*/);
         }
     }
