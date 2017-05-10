@@ -37,6 +37,7 @@ import OurShoppingListObjs.Shop;
  * Created by serguei on 18/09/16.
  */
 public class OurData {
+    final static String TAG = "OurData";
     private static OurData ourInstance = new OurData();
     private Context context = null;
     private OurDBStore db;
@@ -46,7 +47,7 @@ public class OurData {
     }
 
     private OurData() {
-        Log.d("OurData", "Constructor");
+        Log.d(TAG, "Constructor");
     }
 
     public Context getContext() {
@@ -54,21 +55,46 @@ public class OurData {
     }
 
     public void setContext(Context context) {
-        Log.d("OurData", "setContext(...)");
+        Log.d(TAG, "setContext(...)");
         if ( this.context == null ) {
             this.context = context;
             db = new OurDBStore(context);
         } else {
-            Log.w("OurData", "Try to assign context when it already was!");
+            Log.w(TAG, "Try to assign context when it already was!");
         }
+    }
+
+    public boolean dropDatabase() {
+        boolean returnCode = true;
+        if ( db == null ) {
+            Log.e(TAG, "database not ready, set the context first!!");
+            return false;
+        }
+        if ( ! db.getProductsTable().drop() ) {
+            Log.e(TAG, "Failed to drop Products");
+            returnCode = false;
+        }
+        if ( ! db.getCategoriesTable().drop() ) {
+            Log.e(TAG, "Failed to drop Categories");
+            returnCode = false;
+        }
+        if ( ! db.getShopsTable().drop() ) {
+            Log.e(TAG, "Failed to drop Categories");
+            returnCode = false;
+        }
+        if ( ! db.getProductShopTable().drop() ) {
+            Log.e(TAG, "Failed to drop Categories");
+            returnCode = false;
+        }
+        return returnCode;
     }
 
     /***************************************** Products area *****************************************/
 
     public Product getProduct(Integer id) {
-        Log.d("OurData", "getProduct("+id+")");
+        Log.d(TAG, "getProduct("+id+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getProductsTable().getProductObj(id);
@@ -76,50 +102,50 @@ public class OurData {
 
     public Product getProductByPosition(Integer position) {
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         String name = db.getProductsTable().getProductNames().get(position);
-        Log.d("OurData", "getProductByPosition("+position+")");
+        Log.d(TAG, "getProductByPosition("+position+")");
         return db.getProductsTable().getProductObj(name);
     }
 
     public Product getProductByName(String name) {
-        Log.d("OurData", "getProductByName("+name+")");
+        Log.d(TAG, "getProductByName("+name+")");
         return db.getProductsTable().getProductObj(name);
     }
 
     public boolean isProductInDB(String name) {
-        Log.d("OurData", "isProductInDB("+name+")");
+        Log.d(TAG, "isProductInDB("+name+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         return db.getProductsTable().isProductInDB(name);
     }
 
     public Integer getProductId(String name) {
-        Log.d("OurData", "getProductId("+name+")");
+        Log.d(TAG, "getProductId("+name+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return -1;
         }
         return db.getProductsTable().getProductId(name);
     }
 
     public Integer insertProduct(Product obj) {
-        Log.d("OurData", "insertProduct("+obj.getName()+")");
+        Log.d(TAG, "insertProduct("+obj.getName()+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return -1;
         }
         return db.getProductsTable().insert(obj);
     }
 
     public boolean modifyProduct(Product obj) {
-        Log.d("OurData", "modifyProduct("+obj.getId()+")");
+        Log.d(TAG, "modifyProduct("+obj.getId()+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         //return db.modifyProductObj(obj);
@@ -129,18 +155,18 @@ public class OurData {
     }
 
     public boolean removeProduct(Integer id) {
-        Log.d("OurData", "removeProduct("+id+")");
+        Log.d(TAG, "removeProduct("+id+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         return db.getProductsTable().remove(id);
     }
 
     public Integer getNumberOfProducts() {
-        Log.d("OurData", "getNumberOfProducts()");
+        Log.d(TAG, "getNumberOfProducts()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return 0;
         }
         Vector<String> elementsLst = db.getProductsTable().getProductNames();
@@ -148,9 +174,9 @@ public class OurData {
     }
 
     public Vector<String> getProductNames() {
-        Log.d("OurData", "getCategoryNames()");
+        Log.d(TAG, "getCategoryNames()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getProductsTable().getProductNames();
@@ -160,7 +186,7 @@ public class OurData {
 
     public Category getCategory(Integer id) {
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getCategoriesTable().getCategoryObj(id);
@@ -168,54 +194,54 @@ public class OurData {
 
     public Category getCategoryByPosition(Integer position) {
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         String name = db.getCategoriesTable().getCategoryNames().get(position);
-        Log.d("OurData", "getCategoryByPosition("+position+")");
+        Log.d(TAG, "getCategoryByPosition("+position+")");
         return db.getCategoriesTable().getCategoryObj(name);
     }
 
     public Category getCategoryByName(String name) {
-        Log.d("OurData", "getShopByName("+name+")");
+        Log.d(TAG, "getShopByName("+name+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getCategoriesTable().getCategoryObj(name);
     }
 
     public boolean isCategoryInDB(String name) {
-        Log.d("OurData", "isCategoryInDB("+name+")");
+        Log.d(TAG, "isCategoryInDB("+name+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         return db.getCategoriesTable().isCategoryInDB(name);
     }
 
     public Integer getCategoryId(String name) {
-        Log.d("OurData", "getCategoryId("+name+")");
+        Log.d(TAG, "getCategoryId("+name+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return -1;
         }
         return db.getCategoriesTable().getCategoryId(name);
     }
 
     public Integer insertCategory(Category obj) {
-        Log.d("OurData", "insertCategory("+obj.getName()+")");
+        Log.d(TAG, "insertCategory("+obj.getName()+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return -1;
         }
         return db.getCategoriesTable().insert(obj);
     }
 
     public boolean modifyCategory(Category obj) {
-        Log.d("OurData", "modifyCategory("+obj.getId()+")");
+        Log.d(TAG, "modifyCategory("+obj.getId()+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         //return db.modifyCategoryObj(obj);
@@ -225,18 +251,18 @@ public class OurData {
     }
 
     public boolean removeCategory(Integer id) {
-        Log.d("OurData", "removeCategory("+id+")");
+        Log.d(TAG, "removeCategory("+id+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         return db.getCategoriesTable().remove(id);
     }
 
     public Integer getNumberOfCategories() {
-        Log.d("OurData", "getNumberOfCategories()");
+        Log.d(TAG, "getNumberOfCategories()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return 0;
         }
         Vector<String> categoriesLst = db.getCategoriesTable().getCategoryNames();
@@ -244,9 +270,9 @@ public class OurData {
     }
 
     public Vector<String> getCategoryNames() {
-        Log.d("OurData", "getCategoryNames()");
+        Log.d(TAG, "getCategoryNames()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getCategoriesTable().getCategoryNames();
@@ -256,7 +282,7 @@ public class OurData {
 
     public Shop getShop(Integer id) {
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getShopsTable().getShopObj(id);
@@ -264,54 +290,54 @@ public class OurData {
 
     public Shop getShopByPosition(Integer position) {
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         String name = db.getShopsTable().getShopNames().get(position);
-        Log.d("OurData", "getShopByPosition("+position+")");
+        Log.d(TAG, "getShopByPosition("+position+")");
         return db.getShopsTable().getShopObj(name);
     }
 
     public Shop getShopByName(String name) {
-        Log.d("OurData", "getShopByName("+name+")");
+        Log.d(TAG, "getShopByName("+name+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getShopsTable().getShopObj(name);
     }
 
     public boolean isShopInDB(String name) {
-        Log.d("OurData", "isShopInDB("+name+")");
+        Log.d(TAG, "isShopInDB("+name+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         return db.getShopsTable().isShopInDB(name);
     }
 
     public Integer getShopId(String name) {
-        Log.d("OurData", "getShopId("+name+")");
+        Log.d(TAG, "getShopId("+name+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return -1;
         }
         return db.getShopsTable().getShopId(name);
     }
 
     public Integer insertShop(Shop obj) {
-        Log.d("OurData", "insertShop("+obj.getName()+")");
+        Log.d(TAG, "insertShop("+obj.getName()+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return -1;
         }
         return db.getShopsTable().insert(obj);
     }
 
     public boolean modifyShop(Shop obj) {
-        Log.d("OurData", "modifyShop("+obj.getId()+")");
+        Log.d(TAG, "modifyShop("+obj.getId()+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         //return db.modifyShopObj(obj);
@@ -321,18 +347,18 @@ public class OurData {
     }
 
     public boolean removeShop(Integer id) {
-        Log.d("OurData", "removeShop("+id+")");
+        Log.d(TAG, "removeShop("+id+")");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         return db.getShopsTable().remove(id);
     }
 
     public Integer getNumberOfShops() {
-        Log.d("OurData", "getNumberOfShop()");
+        Log.d(TAG, "getNumberOfShop()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return 0;
         }
         Vector<String> shopsLst = db.getShopsTable().getShopNames();
@@ -340,9 +366,9 @@ public class OurData {
     }
 
     public Vector<String> getShopNames() {
-        Log.d("OurData", "getShopNames()");
+        Log.d(TAG, "getShopNames()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getShopsTable().getShopNames();
@@ -351,63 +377,63 @@ public class OurData {
     /***************************** Products may have some shops assigned *****************************/
 
     public Vector<String> getShopProducts(Shop shop) {
-        Log.d("OurData", "getShopProducts()");
+        Log.d(TAG, "getShopProducts()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getProductShopTable().getShopProducts(shop);
     }
 
     public boolean isProductInShop(Product product, Shop shop) {
-        Log.d("OurData", "isProductInShop()");
+        Log.d(TAG, "isProductInShop()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         return db.getProductShopTable().isProductInShop(product, shop);
     }
 
     public Integer getProductPositionInShop(Product product, Shop shop) {
-        Log.d("OurData", "getProductPositionInShop()");
+        Log.d(TAG, "getProductPositionInShop()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getProductShopTable().productPositionInShop(product, shop);
     }
 
     public boolean setProductPositionInShop(Product product, Shop shop, Integer position) {
-        Log.d("OurData", "setProductPositionInShop()");
+        Log.d(TAG, "setProductPositionInShop()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         return db.getProductShopTable().modify(product, shop, position);
     }
 
     public Integer insertProductInShop(Product product, Shop shop, Integer position) {
-        Log.d("OurData", "insertProductInShop()");
+        Log.d(TAG, "insertProductInShop()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return null;
         }
         return db.getProductShopTable().insert(product, shop, position);
     }
 
     public boolean modifyProductInShopPosition(Product product, Shop shop, Integer position) {
-        Log.d("OurData", "modifyProductInShopPosition()");
+        Log.d(TAG, "modifyProductInShopPosition()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         return db.getProductShopTable().modify(product, shop, position);
     }
 
     public boolean removeProductInShop(Product product, Shop shop) {
-        Log.d("OurData", "removeProductInShop()");
+        Log.d(TAG, "removeProductInShop()");
         if (db == null) {
-            Log.e("OurData", "database not ready, set the context first!!");
+            Log.e(TAG, "database not ready, set the context first!!");
             return false;
         }
         return db.getProductShopTable().remove(product, shop);

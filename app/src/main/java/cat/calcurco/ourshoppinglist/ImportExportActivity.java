@@ -25,11 +25,14 @@ package cat.calcurco.ourshoppinglist;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -37,11 +40,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import OurShoppingListDataBase.OurData;
 import OurShoppingListObjs.ImportExport;
 
 /**
@@ -51,11 +56,14 @@ import OurShoppingListObjs.ImportExport;
 public class ImportExportActivity extends AppCompatActivity {
     final static String TAG = "ImportExportActivity";
 
-    private Button importer;
-    private Button exporter;
+    private RadioButton formatcsv;
+    private ProgressBar progressBar;
     private EditText directoryText;
     private EditText filenameText;
-    private ProgressBar progressBar;
+    private Button importer;
+    private Button exporter;
+    private Button droper;
+
 
     private static final int REQUEST_READ_RIGHTS = 0;
     private static final int REQUEST_WRITE_RIGHTS = 1;
@@ -64,8 +72,10 @@ public class ImportExportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.importexport);
 
-        importer = (Button) findViewById(R.id.importer);
-        exporter = (Button) findViewById(R.id.exporter);
+        formatcsv = (RadioButton) findViewById(R.id.formatCSV);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         directoryText = (EditText) findViewById(R.id.directoryText);
         directoryText.setText(getApplicationContext().getExternalMediaDirs()[0].getAbsolutePath());
@@ -77,6 +87,10 @@ public class ImportExportActivity extends AppCompatActivity {
         String fileName = sdf.format(now);  // TODO: Add the extension?
         filenameText.setText(fileName);
         // TODO: click listener for the filenameSelector
+
+        importer = (Button) findViewById(R.id.importer);
+        exporter = (Button) findViewById(R.id.exporter);
+        droper = (Button) findViewById(R.id.droper);
 
         importer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,16 +104,37 @@ public class ImportExportActivity extends AppCompatActivity {
                 doExport();
             }
         });
-
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
+        droper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("Are you absolutely sure?");
+                builder.setMessage("This will remove all stored data and it can NOT be undone.");
+                builder.setPositiveButton("Destroy",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dropDatabase();
+                            }
+                        });
+                builder.setNegativeButton("Do nothing",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                //finish();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
     }
 
     private void doImport() {
         if ( requestRight(findViewById(R.id.importer), Manifest.permission.READ_EXTERNAL_STORAGE,
                 "Read access requested for the feature of import from a CSV file.",
                 REQUEST_READ_RIGHTS) ) {
-            ImportExport importObj = new ImportExport();
+            ImportExport importObj = new ImportExport(getApplicationContext());
             File directory = new File(directoryText.getText().toString());
             String fileName = filenameText.getText().toString();
             if ( ! fileName.endsWith(".csv")) {
@@ -123,7 +158,7 @@ public class ImportExportActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.exporter), "Failed to recover from file",
                         Snackbar.LENGTH_LONG).show();
             }
-            progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.INVISIBLE);
         } else {
             Snackbar.make(findViewById(R.id.exporter), "No read permission to proceed",
                     Snackbar.LENGTH_LONG).show();
@@ -135,7 +170,7 @@ public class ImportExportActivity extends AppCompatActivity {
         if ( requestRight(findViewById(R.id.exporter), Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 "Write access requested for the feature of export to a CSV file.",
                 REQUEST_WRITE_RIGHTS) ) {
-            ImportExport exportObj = new ImportExport();
+            ImportExport exportObj = new ImportExport(getApplicationContext());
             File directory = new File(directoryText.getText().toString());
             String fileName = filenameText.getText().toString();
             hideSoftKeyboard();
@@ -188,21 +223,6 @@ public class ImportExportActivity extends AppCompatActivity {
         return true;
     }
 
-//    //@Override
-//    public void OnRequestPermissionsResultCallback(int requestCode, String[] permissions,
-//                                                   int[] grantResults){
-//        Snackbar.make(findViewById(R.id.exporter),
-//                "OnRequestPermissionsResultCallback("+requestCode+", "+permissions+", "+grantResults+")",
-//                Snackbar.LENGTH_LONG).show();
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                                                   int[] grantResults){
-//        Snackbar.make(findViewById(R.id.exporter),
-//                "onRequestPermissionsResult("+requestCode+", "+permissions+", "+grantResults+")",
-//                Snackbar.LENGTH_LONG).show();
-//    }
     private boolean hideSoftKeyboard() {
         View view = this.getCurrentFocus();
         if ( view != null ) {
@@ -222,5 +242,22 @@ public class ImportExportActivity extends AppCompatActivity {
     public void updateProgressBar(Integer value) {
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setProgress(value);
+    }
+
+    private void dropDatabase() {
+        OurData db = OurData.getInstance();
+        if ( db.dropDatabase() ) {
+            Snackbar.make(findViewById(R.id.exporter), "Database dropped",
+                    Snackbar.LENGTH_LONG).show();
+        } else {
+            Snackbar.make(findViewById(R.id.exporter), "FAILED Database drop",
+                    Snackbar.LENGTH_INDEFINITE).setAction("OK",
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //finish();
+                        }
+                    }).show();
+        }
     }
 }

@@ -31,7 +31,7 @@ class OurTableCategories extends OurTable {
     protected void createTable(SQLiteDatabase sqlite) {
         Log.d(TAG, "createCategoriesTable()");
         String creator =
-                "CREATE TABLE `"+getTableName()+"` (" +
+                "CREATE TABLE IF NOT EXISTS `"+getTableName()+"` (" +
                         "`id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
                         "`name` TEXT NOT NULL" +
                         ");";
@@ -101,6 +101,16 @@ class OurTableCategories extends OurTable {
         sqlite.delete(table, where, whereArgs);
         sqlite.close();
         return true;
+    }
+
+    @Override
+    protected boolean drop() {
+        Integer returnCode;
+        SQLiteDatabase sqlite = db.getWritableDatabase();
+        returnCode = sqlite.delete("Categories", null, null);
+        createTable(sqlite);
+        sqlite.close();
+        return returnCode > 0;
     }
 
     /**** request/action methods ****/

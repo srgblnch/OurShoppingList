@@ -60,4 +60,9 @@ class OurTableTransactions extends OurTable {
         // fixme: Has any sense to remove a transaction?
         return false;
     }
+
+    @Override
+    protected boolean drop() {
+        return false;
+    }
 }

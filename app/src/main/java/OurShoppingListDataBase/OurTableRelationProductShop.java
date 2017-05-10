@@ -33,7 +33,7 @@ class OurTableRelationProductShop extends OurTableRelation {
     protected void createTable(SQLiteDatabase sqlite) {
         Log.d(TAG, "createRelationProductsWithshops()");
         String creator =
-                "CREATE TABLE `"+getTableName()+"` (" +
+                "CREATE TABLE IF NOT EXISTS `"+getTableName()+"` (" +
                         "`Product`INTEGER NOT NULL," +
                         "`Shop`INTEGER NOT NULL," +
                         "`position` INTEGER," +
@@ -112,6 +112,16 @@ class OurTableRelationProductShop extends OurTableRelation {
         sqlite.delete(table, where, whereArgs);
         sqlite.close();
         return true;
+    }
+
+    @Override
+    protected boolean drop() {
+        Integer returnCode;
+        SQLiteDatabase sqlite = db.getWritableDatabase();
+        returnCode = sqlite.delete("Products_has_Shops", null, null);
+        createTable(sqlite);
+        sqlite.close();
+        return returnCode > 0;
     }
 
     /**** request/action methods ****/

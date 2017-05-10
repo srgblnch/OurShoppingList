@@ -9,11 +9,18 @@
         android:layout_height="66dp">
 
         <RadioButton
-            android:id="@+id/CSV"
+            android:id="@+id/formatCSV"
             android:layout_width="353dp"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="csv" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
     </RadioGroup>
 
@@ -80,21 +87,50 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/exporter"
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Export" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/importer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Import" />
+        <LinearLayout
+            android:id="@+id/mainbuttonsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/exporter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Export" />
+
+            <Button
+                android:id="@+id/importer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Import" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/specialButtons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/droper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Drop DB" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

@@ -23,4 +23,5 @@ abstract class OurTableRelation {
     abstract protected Integer insert(OurShoppingListObj obj1, OurShoppingListObj obj2, Integer position);
     abstract protected boolean modify(OurShoppingListObj obj1, OurShoppingListObj obj2, Integer position);
     abstract protected boolean remove(OurShoppingListObj obj1, OurShoppingListObj obj2);
+    abstract protected boolean drop();
 }

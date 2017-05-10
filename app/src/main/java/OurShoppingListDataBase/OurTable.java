@@ -23,4 +23,5 @@ abstract class OurTable {
     abstract protected Integer insert(OurShoppingListObj obj);
     abstract protected boolean modify(OurShoppingListObj obj);
     abstract protected boolean remove(Integer id);
+    abstract protected boolean drop();
 }
