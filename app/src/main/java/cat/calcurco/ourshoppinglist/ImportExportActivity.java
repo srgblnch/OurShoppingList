@@ -58,7 +58,7 @@ import OurShoppingListObjs.DataLoader;
  */
 
 public class ImportExportActivity extends FragmentActivity
-        implements LoaderManager.LoaderCallbacks<Boolean>{
+        /*implements LoaderManager.LoaderCallbacks<Boolean>*/{
     final static String TAG = "ImportExportActivity";
 
     private RadioButton formatcsv;
@@ -81,7 +81,7 @@ public class ImportExportActivity extends FragmentActivity
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
-        DataLoader.activity = new WeakReference<ImportExportActivity>(this);
+        //DataLoader.activity = new WeakReference<ImportExportActivity>(this);
 
         directoryText = (EditText) findViewById(R.id.directoryText);
         directoryText.setText(getApplicationContext().getExternalMediaDirs()[0].getAbsolutePath());
@@ -136,22 +136,22 @@ public class ImportExportActivity extends FragmentActivity
         });
     }
 
-    @Override
-    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-        AsyncTaskLoader<Boolean> loader = new DataLoader(this);
-        loader.forceLoad();
-        return loader;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Boolean> arg0, Boolean arg1) {
-        // todo: here would be the place for the Snackbar with the succeed/failed report
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Boolean> arg0) {
-
-    }
+//    @Override
+//    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
+//        DataLoader loader = new DataLoader(this);
+//        loader.forceLoad();
+//        return loader;
+//    }
+//
+//    @Override
+//    public void onLoadFinished(Loader<Boolean> arg0, Boolean arg1) {
+//        // todo: here would be the place for the Snackbar with the succeed/failed report
+//    }
+//
+//    @Override
+//    public void onLoaderReset(Loader<Boolean> arg0) {
+//
+//    }
 
     private void doImport() {
         if ( requestRight(findViewById(R.id.importer), Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -165,24 +165,25 @@ public class ImportExportActivity extends FragmentActivity
             }
             hideSoftKeyboard();
             progressBar.setVisibility(View.VISIBLE);
-            getSupportLoaderManager().initLoader(0, (Bundle) null, this);
+//            getSupportLoaderManager().initLoader(0, (Bundle) null, this);
             // todo: how to report the Loader the Activity.{IMPORT,EXPORT}
-//            if ( importObj.importDB2CSV(new File(directory, fileName)) ) {
-//                Log.i(TAG, "In doImport(): Succeed");
-//                Snackbar.make(findViewById(R.id.exporter), "Import succeed",
-//                        Snackbar.LENGTH_INDEFINITE).setAction("OK",
-//                        new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                finish();
-//                            }
-//                        }).show();
-//
-//            } else {
-//                Log.e(TAG, "In doImport(): Failed");
-//                Snackbar.make(findViewById(R.id.exporter), "Failed to recover from file",
-//                        Snackbar.LENGTH_LONG).show();
-//            }
+            DataLoader importObj = new DataLoader(DataLoader.ActionEnum.IMPORT);
+            if ( importObj.importDB2CSV(new File(directory, fileName)) ) {
+                Log.i(TAG, "In doImport(): Succeed");
+                Snackbar.make(findViewById(R.id.exporter), "Import succeed",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finish();
+                            }
+                        }).show();
+
+            } else {
+                Log.e(TAG, "In doImport(): Failed");
+                Snackbar.make(findViewById(R.id.exporter), "Failed to recover from file",
+                        Snackbar.LENGTH_LONG).show();
+            }
             progressBar.setVisibility(View.INVISIBLE);
         } else {
             Snackbar.make(findViewById(R.id.exporter), "No read permission to proceed",
@@ -198,25 +199,26 @@ public class ImportExportActivity extends FragmentActivity
             File directory = new File(directoryText.getText().toString());
             String fileName = filenameText.getText().toString();
             hideSoftKeyboard();
-            getSupportLoaderManager().initLoader(0, (Bundle) null, this);
+//            getSupportLoaderManager().initLoader(0, (Bundle) null, this);
             // todo: how to report the Loader the Activity.{IMPORT,EXPORT}
             // proceed with export
-//            if ( exportObj.exportDB2CSV(directory, fileName) ) {
-//                Log.i(TAG, "In doExport(): Succeed");
-//                Snackbar.make(findViewById(R.id.exporter), "Saved file",
-//                        Snackbar.LENGTH_INDEFINITE).setAction("OK",
-//                        new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                finish();
-//                            }
-//                        }).show();
-//                finish();
-//            } else {
-//                Log.e(TAG, "In doExport(): Failed");
-//                Snackbar.make(findViewById(R.id.exporter), "Failed to store the file",
-//                        Snackbar.LENGTH_LONG).show();
-//            }
+            DataLoader exportObj = new DataLoader(DataLoader.ActionEnum.EXPORT);
+            if ( exportObj.exportDB2CSV(directory, fileName) ) {
+                Log.i(TAG, "In doExport(): Succeed");
+                Snackbar.make(findViewById(R.id.exporter), "Saved file",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finish();
+                            }
+                        }).show();
+                finish();
+            } else {
+                Log.e(TAG, "In doExport(): Failed");
+                Snackbar.make(findViewById(R.id.exporter), "Failed to store the file",
+                        Snackbar.LENGTH_LONG).show();
+            }
         } else {
             Snackbar.make(findViewById(R.id.exporter), "No write permission to proceed",
                     Snackbar.LENGTH_LONG).show();
